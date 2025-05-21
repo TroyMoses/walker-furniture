@@ -48,6 +48,8 @@ export default function AboutPage() {
             </div>
             <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
+                width={800}
+                height={800}
                 src="/images/bg/bgimg1.jpg"
                 alt="Historical workshop"
                 className="h-full w-full object-cover"
@@ -178,6 +180,8 @@ export default function AboutPage() {
 
                     <div className="relative h-64 overflow-hidden rounded-lg shadow-md">
                       <Image
+                        width={800}
+                        height={800}
                         src={step.image || "/images/bg/bgimg1.jpg"}
                         alt={step.title}
                         className="h-full w-full object-cover"
@@ -235,6 +239,8 @@ export default function AboutPage() {
               >
                 <div className="relative h-64 overflow-hidden">
                   <Image
+                    width={400}
+                    height={400}
                     src={member.image || "/images/testimonials/shuga.jpg"}
                     alt={member.name}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

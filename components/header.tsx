@@ -12,11 +12,11 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-amber-50 to-white">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-16 items-center justify-between px-10">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-amber-800">
-              Walker Furnitures
+            <span className="text-3xl font-bold text-amber-800">
+              Exit Walker Furniture
             </span>
           </Link>
         </div>
@@ -33,31 +33,31 @@ export function Header() {
               <nav className="flex flex-col gap-4 mt-8">
                 <Link
                   href="/"
-                  className="text-sm font-medium hover:text-amber-800"
+                  className="text-xl font-medium hover:text-amber-800"
                 >
                   Home
                 </Link>
                 <Link
                   href="/products"
-                  className="text-sm font-medium hover:text-amber-800"
+                  className="text-xl font-medium hover:text-amber-800"
                 >
                   Products
                 </Link>
                 <Link
                   href="/about"
-                  className="text-sm font-medium hover:text-amber-800"
+                  className="text-xl font-medium hover:text-amber-800"
                 >
                   About
                 </Link>
                 <Link
                   href="/testimonials"
-                  className="text-sm font-medium hover:text-amber-800"
+                  className="text-xl font-medium hover:text-amber-800"
                 >
                   Testimonials
                 </Link>
                 <Link
                   href="/contact"
-                  className="text-sm font-medium hover:text-amber-800"
+                  className="text-xl font-medium hover:text-amber-800"
                 >
                   Contact
                 </Link>

@@ -139,6 +139,8 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
+                width={800}
+                height={800}
                 src="/images/bg/bgimg2.jpg"
                 alt="Our workshop"
                 className="h-full w-full object-cover"
