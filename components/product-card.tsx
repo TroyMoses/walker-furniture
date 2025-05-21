@@ -46,7 +46,7 @@ export function ProductCard({
           <p className="text-amber-800 font-medium">{price}</p>
           <ProductRating rating={rating} />
         </div>
-        <Button className="mt-4 w-full bg-amber-800 hover:bg-amber-900">
+        <Button className="mt-4 w-full bg-amber-800 hover:bg-amber-900 cursor-pointer">
           Add to Cart
         </Button>
       </div>

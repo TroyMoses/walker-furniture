@@ -7,7 +7,7 @@ export function Footer() {
   return (
     <>
       {/* Newsletter */}
-      <section className="bg-gradient-to-r from-amber-800 to-amber-700 py-12 text-white">
+      <section className="bg-gradient-to-r from-amber-800 to-amber-700 py-12 px-10 text-white">
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div>
@@ -26,7 +26,7 @@ export function Footer() {
               />
               <Button
                 variant="outline"
-                className="border-white text-white hover:bg-white/10"
+                className="border-white cursor-pointer text-gray-800 hover:bg-white/10"
               >
                 Subscribe
               </Button>
@@ -36,27 +36,27 @@ export function Footer() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12 text-gray-300">
+      <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12 px-10 text-gray-300">
         <div className="container">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             <div>
               <h3 className="mb-4 text-lg font-bold text-white">
-                Walker Furnitures
+                Exit Walker Furniture
               </h3>
               <p className="mb-4">
                 Crafting quality furniture for generations.
               </p>
               <div className="flex gap-4">
-                <Link href="#" className="hover:text-white">
+                <Link href="#" className="hover:text-amber-800">
                   <Facebook className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="hover:text-white">
+                <Link href="#" className="hover:text-amber-800">
                   <Instagram className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="hover:text-white">
+                <Link href="#" className="hover:text-amber-800">
                   <Twitter className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="hover:text-white">
+                <Link href="#" className="hover:text-amber-800">
                   <Linkedin className="h-5 w-5" />
                 </Link>
               </div>
@@ -67,7 +67,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/products?category=living-room"
-                    className="hover:text-white"
+                    className="hover:text-amber-800"
                   >
                     Living Room
                   </Link>
@@ -75,7 +75,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/products?category=bedroom"
-                    className="hover:text-white"
+                    className="hover:text-amber-800"
                   >
                     Bedroom
                   </Link>
@@ -83,7 +83,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/products?category=dining-room"
-                    className="hover:text-white"
+                    className="hover:text-amber-800"
                   >
                     Dining Room
                   </Link>
@@ -91,7 +91,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/products?category=office"
-                    className="hover:text-white"
+                    className="hover:text-amber-800"
                   >
                     Office
                   </Link>
@@ -99,7 +99,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/products?category=outdoor"
-                    className="hover:text-white"
+                    className="hover:text-amber-800"
                   >
                     Outdoor
                   </Link>
@@ -112,27 +112,27 @@ export function Footer() {
               </h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/contact" className="hover:text-white">
+                  <Link href="/contact" className="hover:text-amber-800">
                     Contact Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/faq" className="hover:text-white">
+                  <Link href="/faq" className="hover:text-amber-800">
                     FAQs
                   </Link>
                 </li>
                 <li>
-                  <Link href="/shipping" className="hover:text-white">
+                  <Link href="/shipping" className="hover:text-amber-800">
                     Shipping & Returns
                   </Link>
                 </li>
                 <li>
-                  <Link href="/warranty" className="hover:text-white">
+                  <Link href="/warranty" className="hover:text-amber-800">
                     Warranty
                   </Link>
                 </li>
                 <li>
-                  <Link href="/care" className="hover:text-white">
+                  <Link href="/care" className="hover:text-amber-800">
                     Care Instructions
                   </Link>
                 </li>
@@ -142,27 +142,27 @@ export function Footer() {
               <h3 className="mb-4 text-lg font-bold text-white">About Us</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/about" className="hover:text-white">
+                  <Link href="/about" className="hover:text-amber-800">
                     Our Story
                   </Link>
                 </li>
                 <li>
-                  <Link href="/craftsmen" className="hover:text-white">
+                  <Link href="/craftsmen" className="hover:text-amber-800">
                     Craftsmen
                   </Link>
                 </li>
                 <li>
-                  <Link href="/sustainability" className="hover:text-white">
+                  <Link href="/sustainability" className="hover:text-amber-800">
                     Sustainability
                   </Link>
                 </li>
                 <li>
-                  <Link href="/showrooms" className="hover:text-white">
+                  <Link href="/showrooms" className="hover:text-amber-800">
                     Showrooms
                   </Link>
                 </li>
                 <li>
-                  <Link href="/careers" className="hover:text-white">
+                  <Link href="/careers" className="hover:text-amber-800">
                     Careers
                   </Link>
                 </li>
@@ -171,7 +171,7 @@ export function Footer() {
           </div>
           <div className="mt-12 border-t border-gray-700 pt-8 text-center">
             <p>
-              &copy; {new Date().getFullYear()} Walker Furnitures. All rights
+              &copy; {new Date().getFullYear()} Exit Walker Furniture. All rights
               reserved.
             </p>
           </div>

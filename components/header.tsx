@@ -97,10 +97,10 @@ export function Header() {
         )}
 
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="hidden md:flex">
+          <Button variant="outline" className="hidden border-amber-800 md:flex cursor-pointer">
             Sign In
           </Button>
-          <Button className="bg-amber-800 hover:bg-amber-900">Shop Now</Button>
+          <Button className="bg-amber-800 hover:bg-amber-900 cursor-pointer">Shop Now</Button>
         </div>
       </div>
     </header>

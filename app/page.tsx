@@ -121,7 +121,7 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <Button variant="outline" className="gap-2" asChild>
+            <Button variant="outline" className="gap-2 border-amber-800" asChild>
               <Link href="/products">
                 View All Products <ChevronRight className="h-4 w-4" />
               </Link>
@@ -133,7 +133,7 @@ export default function Home() {
       {/* About Section */}
       <section
         id="about"
-        className="py-16 bg-gradient-to-b from-white to-amber-50/30"
+        className="py-16 px-10 bg-gradient-to-b from-white to-amber-50/30"
       >
         <div className="container">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
@@ -141,7 +141,7 @@ export default function Home() {
               <Image
                 width={800}
                 height={800}
-                src="/images/bg/bgimg2.jpg"
+                src="/images/flyer.jpeg"
                 alt="Our workshop"
                 className="h-full w-full object-cover"
               />
@@ -151,7 +151,7 @@ export default function Home() {
                 About Walker Furnitures
               </h2>
               <p className="mb-4 text-gray-700">
-                Since 1985, Walker Furnitures has been crafting high-quality,
+                Since 2017, Walker Furnitures has been crafting high-quality,
                 sustainable furniture that stands the test of time. Our master
                 craftsmen combine traditional woodworking techniques with modern
                 design to create pieces that are both functional and beautiful.
@@ -174,7 +174,7 @@ export default function Home() {
       {/* Testimonials */}
       <section
         id="testimonials"
-        className="bg-gradient-to-b from-amber-50/30 to-white py-16"
+        className="bg-gradient-to-b from-amber-50/30 to-white py-16 px-10"
       >
         <div className="container">
           <SectionHeading title="What Our Customers Say" />

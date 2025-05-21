@@ -34,7 +34,7 @@ export function HeroSection({
       </div>
       <div className="container relative flex h-full flex-col items-center -mt-20 justify-center gap-4 text-white">
         <h1 className="max-w-2xl text-5xl font-bold leading-tight text-center">{title}</h1>
-        <p className="max-w-xl text-lg">{description}</p>
+        <p className="max-w-xl text-center text-lg">{description}</p>
         <div className="mt-6 flex gap-4">
           <Button size="lg" className="bg-amber-800 hover:bg-amber-900" asChild>
             <a href={primaryButtonHref}>{primaryButtonText}</a>
@@ -43,7 +43,7 @@ export function HeroSection({
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white/10"
+              className="border-white text-gray-800 hover:bg-white/10"
               asChild
             >
               <a href={secondaryButtonHref}>{secondaryButtonText}</a>
