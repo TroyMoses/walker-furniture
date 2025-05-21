@@ -15,7 +15,7 @@ export default function ContactPage() {
       <HeroSection
         title="Get In Touch"
         description="We'd love to hear from you. Contact us with any questions, feedback, or to schedule a showroom visit."
-        imageSrc="/placeholder.svg?height=400&width=1200"
+        imageSrc="/images/bg/bgimg1.jpg"
         primaryButtonText="Visit Our Showroom"
         primaryButtonHref="#showroom"
       />
@@ -208,7 +208,9 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                width={800}
+                height={800}
+                src="/images/bg/bgimg1.jpg"
                 alt="Walker Furnitures Showroom"
                 className="h-full w-full object-cover"
               />

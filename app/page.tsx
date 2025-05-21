@@ -8,6 +8,7 @@ import { TestimonialCard } from "@/components/testimonial-card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -17,14 +18,14 @@ export default function Home() {
       <HeroSection
         title="Crafting Comfort for Your Home"
         description="Discover our handcrafted furniture collection designed to bring elegance and comfort to your living spaces."
-        imageSrc="/placeholder.svg?height=600&width=1200"
+        imageSrc="/images/bg/bgimg2.jpg"
         primaryButtonText="Explore Collection"
         secondaryButtonText="Book Consultation"
         primaryButtonHref="/products"
       />
 
       {/* Featured Categories */}
-      <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
+      <section className="pt-16 pb-4 md:pb-8 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30">
         <div className="container">
           <SectionHeading
             title="Our Collections"
@@ -35,19 +36,19 @@ export default function Home() {
               {
                 title: "Living Room",
                 description: "Elegant sofas, coffee tables, and accent pieces",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/living/product2.jpeg",
                 href: "/products?category=living-room",
               },
               {
                 title: "Bedroom",
                 description: "Comfortable beds, dressers, and nightstands",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/beds/bed1.jpeg",
                 href: "/products?category=bedroom",
               },
               {
                 title: "Dining",
                 description: "Stylish dining tables, chairs, and buffets",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/dining/diningtable.jpeg",
                 href: "/products?category=dining",
               },
             ].map((category, index) => (
@@ -66,7 +67,7 @@ export default function Home() {
       {/* Featured Products */}
       <section
         id="products"
-        className="bg-gradient-to-b from-amber-50/30 to-white py-16"
+        className="bg-gradient-to-b from-amber-50/30 to-white pt-16 pb-4 md:pb-8 px-3 md:px-10"
       >
         <div className="container">
           <SectionHeading
@@ -79,7 +80,7 @@ export default function Home() {
                 id: "oakwood-sofa",
                 name: "Oakwood Sofa",
                 price: "$1,299",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/couches/couches.jpeg",
                 rating: 4.8,
                 category: "Living Room",
               },
@@ -87,7 +88,7 @@ export default function Home() {
                 id: "maple-dining-table",
                 name: "Maple Dining Table",
                 price: "$899",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/dining/diningtable3.jpeg",
                 rating: 4.5,
                 category: "Dining",
               },
@@ -95,7 +96,7 @@ export default function Home() {
                 id: "walnut-bed-frame",
                 name: "Walnut Bed Frame",
                 price: "$1,499",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/beds/bed4.jpeg",
                 rating: 4.9,
                 category: "Bedroom",
               },
@@ -103,7 +104,7 @@ export default function Home() {
                 id: "cherry-bookcase",
                 name: "Cherry Wood Bookcase",
                 price: "$749",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/library/library.jpeg",
                 rating: 4.6,
                 category: "Living Room",
               },
@@ -120,10 +121,10 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <Button variant="outline" className="gap-2" asChild>
-              <a href="/products">
+            <Button variant="outline" className="gap-2 border-amber-800" asChild>
+              <Link href="/products">
                 View All Products <ChevronRight className="h-4 w-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
@@ -132,23 +133,25 @@ export default function Home() {
       {/* About Section */}
       <section
         id="about"
-        className="py-16 bg-gradient-to-b from-white to-amber-50/30"
+        className="pt-16 pb-2 md:pb-8 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30"
       >
         <div className="container">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
+            <div className="relative h-full md:h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                width={800}
+                height={800}
+                src="/images/flyer.jpeg"
                 alt="Our workshop"
-                className="h-full w-full object-cover"
+                className="object-fill h-full w-full"
               />
             </div>
             <div className="flex flex-col justify-center">
-              <h2 className="mb-6 text-3xl font-bold">
-                About Walker Furnitures
+              <h2 className="mb-6 text-3xl font-bold text-center md:text-start">
+                About Exit Walker Furnitures
               </h2>
               <p className="mb-4 text-gray-700">
-                Since 1985, Walker Furnitures has been crafting high-quality,
+                Since 2017, Walker Furnitures has been crafting high-quality,
                 sustainable furniture that stands the test of time. Our master
                 craftsmen combine traditional woodworking techniques with modern
                 design to create pieces that are both functional and beautiful.
@@ -160,9 +163,11 @@ export default function Home() {
                 workshop is built to become a cherished part of your home for
                 generations.
               </p>
+              <div className="flex justify-center md:justify-start">
               <Button className="w-fit bg-amber-800 hover:bg-amber-900" asChild>
                 <a href="/about">Learn Our Story</a>
               </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +176,7 @@ export default function Home() {
       {/* Testimonials */}
       <section
         id="testimonials"
-        className="bg-gradient-to-b from-amber-50/30 to-white py-16"
+        className="bg-gradient-to-b from-amber-50/30 to-white py-8 md:py-16 px-3 md:px-10"
       >
         <div className="container">
           <SectionHeading title="What Our Customers Say" />
@@ -181,21 +186,21 @@ export default function Home() {
                 name: "Sarah Johnson",
                 quote:
                   "The quality of our dining table is exceptional. It's become the centerpiece of our home where we gather for family meals.",
-                image: "/placeholder.svg?height=100&width=100",
+                image: "/images/testimonials/shuga.jpg",
                 rating: 5.0,
               },
               {
                 name: "Michael Chen",
                 quote:
                   "I've purchased furniture from many stores, but Walker's craftsmanship is unmatched. Their attention to detail is evident in every piece.",
-                image: "/placeholder.svg?height=100&width=100",
+                image: "/images/testimonials/shuga.jpg",
                 rating: 4.7,
               },
               {
                 name: "Emily Rodriguez",
                 quote:
                   "The custom bookshelf they built fits perfectly in our living room. The team was professional from design to delivery.",
-                image: "/placeholder.svg?height=100&width=100",
+                image: "/images/testimonials/shuga.jpg",
                 rating: 4.9,
               },
             ].map((testimonial, index) => (

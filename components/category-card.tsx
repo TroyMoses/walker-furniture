@@ -30,7 +30,7 @@ export function CategoryCard({
         <p className="mb-4 text-sm opacity-90">{description}</p>
         <Button
           variant="outline"
-          className="border-white text-white hover:bg-white/10"
+          className="border-white text-gray-800 hover:bg-white/50"
           asChild
         >
           <Link href={href}>View Collection</Link>
