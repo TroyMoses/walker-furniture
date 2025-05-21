@@ -13,7 +13,7 @@ export default function TestimonialsPage() {
       name: "Sarah Johnson",
       quote:
         "The quality of our dining table is exceptional. It's become the centerpiece of our home where we gather for family meals. The craftsmanship is evident in every detail, and the finish is even more beautiful in person than in the photos.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 5.0,
       category: "Dining",
     },
@@ -21,7 +21,7 @@ export default function TestimonialsPage() {
       name: "Michael Chen",
       quote:
         "I've purchased furniture from many stores, but Walker's craftsmanship is unmatched. Their attention to detail is evident in every piece. The bedroom set we ordered has transformed our space into a luxurious retreat. Worth every penny!",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.7,
       category: "Bedroom",
     },
@@ -29,7 +29,7 @@ export default function TestimonialsPage() {
       name: "Emily Rodriguez",
       quote:
         "The custom bookshelf they built fits perfectly in our living room. The team was professional from design to delivery. They listened to our needs and created exactly what we envisioned, with some thoughtful suggestions that made the final piece even better.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.9,
       category: "Living Room",
     },
@@ -37,7 +37,7 @@ export default function TestimonialsPage() {
       name: "David Thompson",
       quote:
         "Our Walker coffee table is not just functional but a true work of art. The wood grain is stunning, and the craftsmanship is impeccable. We receive compliments from everyone who visits our home.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 5.0,
       category: "Living Room",
     },
@@ -45,7 +45,7 @@ export default function TestimonialsPage() {
       name: "Jennifer Lee",
       quote:
         "The office desk I purchased has made working from home a joy. It's sturdy, beautiful, and perfectly sized for my space. The drawers slide smoothly, and the finish is resistant to scratches and water marks.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.8,
       category: "Office",
     },
@@ -53,7 +53,7 @@ export default function TestimonialsPage() {
       name: "Robert Garcia",
       quote:
         "We furnished our entire dining room with Walker pieces, and the cohesive look is stunning. The chairs are comfortable for long dinner parties, and the table expands easily to accommodate extra guests.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.9,
       category: "Dining",
     },
@@ -61,7 +61,7 @@ export default function TestimonialsPage() {
       name: "Olivia Wilson",
       quote:
         "The outdoor furniture set has withstood two seasons of harsh weather and still looks brand new. The teak has developed a beautiful patina, and the cushions have remained vibrant despite sun exposure.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.6,
       category: "Outdoor",
     },
@@ -69,7 +69,7 @@ export default function TestimonialsPage() {
       name: "James Miller",
       quote:
         "Our king bed frame is not only gorgeous but incredibly sturdy. No squeaks or wobbles, even after years of use. The headboard design is exactly what we wanted - elegant but not overstated.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.8,
       category: "Bedroom",
     },
@@ -77,7 +77,7 @@ export default function TestimonialsPage() {
       name: "Sophia Brown",
       quote:
         "The customer service at Walker Furnitures is as exceptional as their products. When we had a small issue with our delivery, they resolved it immediately and with genuine care for our satisfaction.",
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/testimonials/shuga.jpg",
       rating: 4.7,
       category: "Service",
     },
@@ -90,7 +90,7 @@ export default function TestimonialsPage() {
       <HeroSection
         title="Customer Testimonials"
         description="Hear what our customers have to say about their Walker Furnitures experience."
-        imageSrc="/placeholder.svg?height=500&width=1200"
+        imageSrc="/images/bg/bgimg2.jpg"
         primaryButtonText="Share Your Story"
         primaryButtonHref="#share-story"
       />
