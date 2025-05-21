@@ -14,7 +14,7 @@ export default function AboutPage() {
       <HeroSection
         title="Our Story"
         description="Discover the passion and craftsmanship behind Walker Furnitures."
-        imageSrc="/placeholder.svg?height=500&width=1200"
+        imageSrc="/images/bg/bgimg1.jpg"
         primaryButtonText="Meet Our Team"
         primaryButtonHref="#team"
       />
@@ -48,7 +48,7 @@ export default function AboutPage() {
             </div>
             <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/images/bg/bgimg1.jpg"
                 alt="Historical workshop"
                 className="h-full w-full object-cover"
               />
@@ -134,31 +134,31 @@ export default function AboutPage() {
                   title: "Material Selection",
                   description:
                     "We carefully select the finest hardwoods from sustainable sources, examining each piece for grain pattern, color, and structural integrity.",
-                  image: "/placeholder.svg?height=300&width=400",
+                  image: "/images/bg/bgimg1.jpg",
                 },
                 {
                   title: "Design & Planning",
                   description:
                     "Our designers create detailed plans that honor traditional woodworking while incorporating modern functionality and aesthetics.",
-                  image: "/placeholder.svg?height=300&width=400",
+                  image: "/images/bg/bgimg1.jpg",
                 },
                 {
                   title: "Crafting",
                   description:
                     "Our master craftsmen use both traditional hand tools and precision machinery to shape, join, and assemble each piece with meticulous attention to detail.",
-                  image: "/placeholder.svg?height=300&width=400",
+                  image: "/images/bg/bgimg1.jpg",
                 },
                 {
                   title: "Finishing",
                   description:
                     "Multiple layers of eco-friendly finishes are applied by hand, enhancing the natural beauty of the wood while providing lasting protection.",
-                  image: "/placeholder.svg?height=300&width=400",
+                  image: "/images/bg/bgimg1.jpg",
                 },
                 {
                   title: "Quality Control",
                   description:
                     "Each piece undergoes rigorous inspection to ensure it meets our exacting standards for beauty, functionality, and durability.",
-                  image: "/placeholder.svg?height=300&width=400",
+                  image: "/images/bg/bgimg1.jpg",
                 },
               ].map((step, index) => (
                 <div key={index} className="relative">
@@ -178,7 +178,7 @@ export default function AboutPage() {
 
                     <div className="relative h-64 overflow-hidden rounded-lg shadow-md">
                       <Image
-                        src={step.image || "/placeholder.svg"}
+                        src={step.image || "/images/bg/bgimg1.jpg"}
                         alt={step.title}
                         className="h-full w-full object-cover"
                       />
@@ -208,25 +208,25 @@ export default function AboutPage() {
                 name: "Robert Walker",
                 role: "Master Craftsman & CEO",
                 bio: "Son of founder James Walker, Robert has been crafting furniture since childhood and now leads our company with the same passion and dedication.",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/testimonials/shuga.jpg",
               },
               {
                 name: "Elena Chen",
                 role: "Lead Designer",
                 bio: "With a background in architecture and furniture design, Elena brings a unique perspective that blends functionality with timeless aesthetics.",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/testimonials/shuga.jpg",
               },
               {
                 name: "Marcus Johnson",
                 role: "Master Woodworker",
                 bio: "With over 25 years of experience, Marcus specializes in intricate joinery and detailed carving that sets our furniture apart.",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/testimonials/shuga.jpg",
               },
               {
                 name: "Sophia Rodriguez",
                 role: "Sustainability Director",
                 bio: "Sophia ensures our materials and processes meet the highest standards of environmental responsibility and ethical sourcing.",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/testimonials/shuga.jpg",
               },
             ].map((member, index) => (
               <div
@@ -235,7 +235,7 @@ export default function AboutPage() {
               >
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src={member.image || "/placeholder.svg"}
+                    src={member.image || "/images/testimonials/shuga.jpg"}
                     alt={member.name}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />

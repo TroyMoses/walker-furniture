@@ -8,6 +8,7 @@ import { TestimonialCard } from "@/components/testimonial-card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
       <HeroSection
         title="Crafting Comfort for Your Home"
         description="Discover our handcrafted furniture collection designed to bring elegance and comfort to your living spaces."
-        imageSrc="/placeholder.svg?height=600&width=1200"
+        imageSrc="/images/bg/bgimg2.jpg"
         primaryButtonText="Explore Collection"
         secondaryButtonText="Book Consultation"
         primaryButtonHref="/products"
@@ -35,19 +36,19 @@ export default function Home() {
               {
                 title: "Living Room",
                 description: "Elegant sofas, coffee tables, and accent pieces",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/living/product2.jpeg",
                 href: "/products?category=living-room",
               },
               {
                 title: "Bedroom",
                 description: "Comfortable beds, dressers, and nightstands",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/beds/bed1.jpeg",
                 href: "/products?category=bedroom",
               },
               {
                 title: "Dining",
                 description: "Stylish dining tables, chairs, and buffets",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/dining/diningtable.jpeg",
                 href: "/products?category=dining",
               },
             ].map((category, index) => (
@@ -79,7 +80,7 @@ export default function Home() {
                 id: "oakwood-sofa",
                 name: "Oakwood Sofa",
                 price: "$1,299",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/couches/couches.jpeg",
                 rating: 4.8,
                 category: "Living Room",
               },
@@ -87,7 +88,7 @@ export default function Home() {
                 id: "maple-dining-table",
                 name: "Maple Dining Table",
                 price: "$899",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/dining/diningtable3.jpeg",
                 rating: 4.5,
                 category: "Dining",
               },
@@ -95,7 +96,7 @@ export default function Home() {
                 id: "walnut-bed-frame",
                 name: "Walnut Bed Frame",
                 price: "$1,499",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/beds/bed4.jpeg",
                 rating: 4.9,
                 category: "Bedroom",
               },
@@ -103,7 +104,7 @@ export default function Home() {
                 id: "cherry-bookcase",
                 name: "Cherry Wood Bookcase",
                 price: "$749",
-                image: "/placeholder.svg?height=300&width=300",
+                image: "/images/library/library.jpeg",
                 rating: 4.6,
                 category: "Living Room",
               },
@@ -121,9 +122,9 @@ export default function Home() {
           </div>
           <div className="mt-12 text-center">
             <Button variant="outline" className="gap-2" asChild>
-              <a href="/products">
+              <Link href="/products">
                 View All Products <ChevronRight className="h-4 w-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
@@ -138,7 +139,7 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/images/bg/bgimg2.jpg"
                 alt="Our workshop"
                 className="h-full w-full object-cover"
               />
@@ -181,21 +182,21 @@ export default function Home() {
                 name: "Sarah Johnson",
                 quote:
                   "The quality of our dining table is exceptional. It's become the centerpiece of our home where we gather for family meals.",
-                image: "/placeholder.svg?height=100&width=100",
+                image: "/images/testimonials/shuga.jpg",
                 rating: 5.0,
               },
               {
                 name: "Michael Chen",
                 quote:
                   "I've purchased furniture from many stores, but Walker's craftsmanship is unmatched. Their attention to detail is evident in every piece.",
-                image: "/placeholder.svg?height=100&width=100",
+                image: "/images/testimonials/shuga.jpg",
                 rating: 4.7,
               },
               {
                 name: "Emily Rodriguez",
                 quote:
                   "The custom bookshelf they built fits perfectly in our living room. The team was professional from design to delivery.",
-                image: "/placeholder.svg?height=100&width=100",
+                image: "/images/testimonials/shuga.jpg",
                 rating: 4.9,
               },
             ].map((testimonial, index) => (
