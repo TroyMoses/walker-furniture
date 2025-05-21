@@ -7,11 +7,11 @@ export function Footer() {
   return (
     <>
       {/* Newsletter */}
-      <section className="bg-gradient-to-r from-amber-800 to-amber-700 py-12 px-10 text-white">
+      <section className="bg-gradient-to-r from-amber-800 to-amber-700 py-12 px-3 md:px-10 text-white">
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div>
-              <h2 className="text-2xl font-bold">
+              <h2 className="text-[22px] md:text-2xl font-bold">
                 Subscribe to Our Newsletter
               </h2>
               <p>
@@ -36,17 +36,32 @@ export function Footer() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12 px-10 text-gray-300">
+      <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12 px-4 md:px-10 text-gray-300">
         <div className="container">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+          {/* Desktop Menu */}
+          <div className="hidden md:grid grid-cols-4 gap-8">
+            {/* Overview */}
             <div>
               <h3 className="mb-4 text-lg font-bold text-white">
                 Exit Walker Furniture
               </h3>
-              <p className="mb-4">
+              <p className="mb-2">
                 Crafting quality furniture for generations.
               </p>
-              <div className="flex gap-4">
+              <div>
+                <p className="mb-2">Industrial Area, Kampala.</p>
+                <p>
+                  <a href="tel:+256123456789" className="mb-4">
+                    +256 123 456 789
+                  </a>
+                </p>
+                <p>
+                  <a href="mailto:exitwalkerfurniture@gmail.com">
+                    exitwalkerfurniture@gmail.com
+                  </a>
+                </p>
+              </div>
+              <div className="flex gap-4 mt-4">
                 <Link href="#" className="hover:text-amber-800">
                   <Facebook className="h-5 w-5" />
                 </Link>
@@ -61,6 +76,40 @@ export function Footer() {
                 </Link>
               </div>
             </div>
+
+            {/* About */}
+            <div>
+              <h3 className="mb-4 text-lg font-bold text-white">About Us</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/about" className="hover:text-amber-800">
+                    Our Story
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/craftsmen" className="hover:text-amber-800">
+                    Craftsmen
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/sustainability" className="hover:text-amber-800">
+                    Sustainability
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/showrooms" className="hover:text-amber-800">
+                    Showrooms
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/careers" className="hover:text-amber-800">
+                    Careers
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Shop */}
             <div>
               <h3 className="mb-4 text-lg font-bold text-white">Shop</h3>
               <ul className="space-y-2">
@@ -106,6 +155,8 @@ export function Footer() {
                 </li>
               </ul>
             </div>
+
+            {/* Customer Services */}
             <div>
               <h3 className="mb-4 text-lg font-bold text-white">
                 Customer Service
@@ -138,32 +189,161 @@ export function Footer() {
                 </li>
               </ul>
             </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <div className="md:hidden grid grid-cols-1 gap-8 md:grid-cols-4">
+            {/* Overview */}
             <div>
-              <h3 className="mb-4 text-lg font-bold text-white">About Us</h3>
+              <h3 className="mb-4 text-lg font-bold text-white">
+                Exit Walker Furniture
+              </h3>
+              <p className="mb-2">
+                Crafting quality furniture for generations.
+              </p>
+              <div>
+                <p className="mb-2">Industrial Area, Kampala.</p>
+                <p>
+                  <a href="tel:+256123456789" className="mb-4">
+                    +256 123 456 789
+                  </a>
+                </p>
+                <p>
+                  <a href="mailto:exitwalkerfurniture@gmail.com">
+                    exitwalkerfurniture@gmail.com
+                  </a>
+                </p>
+              </div>
+              <div className="flex gap-4 mt-4">
+                <Link href="#" className="hover:text-amber-800">
+                  <Facebook className="h-5 w-5" />
+                </Link>
+                <Link href="#" className="hover:text-amber-800">
+                  <Instagram className="h-5 w-5" />
+                </Link>
+                <Link href="#" className="hover:text-amber-800">
+                  <Twitter className="h-5 w-5" />
+                </Link>
+                <Link href="#" className="hover:text-amber-800">
+                  <Linkedin className="h-5 w-5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* About and Shop */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* About */}
+              <div>
+                <h3 className="mb-4 text-lg font-bold text-white">About Us</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/about" className="hover:text-amber-800">
+                      Our Story
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/craftsmen" className="hover:text-amber-800">
+                      Craftsmen
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/sustainability"
+                      className="hover:text-amber-800"
+                    >
+                      Sustainability
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/showrooms" className="hover:text-amber-800">
+                      Showrooms
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/careers" className="hover:text-amber-800">
+                      Careers
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Shop */}
+              <div>
+                <h3 className="mb-4 text-lg font-bold text-white">Shop</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link
+                      href="/products?category=living-room"
+                      className="hover:text-amber-800"
+                    >
+                      Living Room
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/products?category=bedroom"
+                      className="hover:text-amber-800"
+                    >
+                      Bedroom
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/products?category=dining-room"
+                      className="hover:text-amber-800"
+                    >
+                      Dining Room
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/products?category=office"
+                      className="hover:text-amber-800"
+                    >
+                      Office
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/products?category=outdoor"
+                      className="hover:text-amber-800"
+                    >
+                      Outdoor
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Customer Service */}
+            <div>
+              <h3 className="mb-4 text-lg font-bold text-white">
+                Customer Service
+              </h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/about" className="hover:text-amber-800">
-                    Our Story
+                  <Link href="/contact" className="hover:text-amber-800">
+                    Contact Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/craftsmen" className="hover:text-amber-800">
-                    Craftsmen
+                  <Link href="/faq" className="hover:text-amber-800">
+                    FAQs
                   </Link>
                 </li>
                 <li>
-                  <Link href="/sustainability" className="hover:text-amber-800">
-                    Sustainability
+                  <Link href="/shipping" className="hover:text-amber-800">
+                    Shipping & Returns
                   </Link>
                 </li>
                 <li>
-                  <Link href="/showrooms" className="hover:text-amber-800">
-                    Showrooms
+                  <Link href="/warranty" className="hover:text-amber-800">
+                    Warranty
                   </Link>
                 </li>
                 <li>
-                  <Link href="/careers" className="hover:text-amber-800">
-                    Careers
+                  <Link href="/care" className="hover:text-amber-800">
+                    Care Instructions
                   </Link>
                 </li>
               </ul>
@@ -171,8 +351,8 @@ export function Footer() {
           </div>
           <div className="mt-12 border-t border-gray-700 pt-8 text-center">
             <p>
-              &copy; {new Date().getFullYear()} Exit Walker Furniture. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} Exit Walker Furniture. All
+              rights reserved.
             </p>
           </div>
         </div>

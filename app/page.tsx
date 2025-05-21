@@ -25,7 +25,7 @@ export default function Home() {
       />
 
       {/* Featured Categories */}
-      <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
+      <section className="pt-16 pb-4 md:pb-8 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30">
         <div className="container">
           <SectionHeading
             title="Our Collections"
@@ -67,7 +67,7 @@ export default function Home() {
       {/* Featured Products */}
       <section
         id="products"
-        className="bg-gradient-to-b from-amber-50/30 to-white py-16"
+        className="bg-gradient-to-b from-amber-50/30 to-white pt-16 pb-4 md:pb-8 px-3 md:px-10"
       >
         <div className="container">
           <SectionHeading
@@ -133,22 +133,22 @@ export default function Home() {
       {/* About Section */}
       <section
         id="about"
-        className="py-16 px-10 bg-gradient-to-b from-white to-amber-50/30"
+        className="pt-16 pb-2 md:pb-8 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30"
       >
         <div className="container">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
+            <div className="relative h-full md:h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
                 width={800}
                 height={800}
                 src="/images/flyer.jpeg"
                 alt="Our workshop"
-                className="h-full w-full object-cover"
+                className="object-fill h-full w-full"
               />
             </div>
             <div className="flex flex-col justify-center">
-              <h2 className="mb-6 text-3xl font-bold">
-                About Walker Furnitures
+              <h2 className="mb-6 text-3xl font-bold text-center md:text-start">
+                About Exit Walker Furnitures
               </h2>
               <p className="mb-4 text-gray-700">
                 Since 2017, Walker Furnitures has been crafting high-quality,
@@ -163,9 +163,11 @@ export default function Home() {
                 workshop is built to become a cherished part of your home for
                 generations.
               </p>
+              <div className="flex justify-center md:justify-start">
               <Button className="w-fit bg-amber-800 hover:bg-amber-900" asChild>
                 <a href="/about">Learn Our Story</a>
               </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -174,7 +176,7 @@ export default function Home() {
       {/* Testimonials */}
       <section
         id="testimonials"
-        className="bg-gradient-to-b from-amber-50/30 to-white py-16 px-10"
+        className="bg-gradient-to-b from-amber-50/30 to-white py-8 md:py-16 px-3 md:px-10"
       >
         <div className="container">
           <SectionHeading title="What Our Customers Say" />
