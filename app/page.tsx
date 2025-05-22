@@ -143,7 +143,7 @@ export default function Home() {
                 height={800}
                 src="/images/flyer.jpeg"
                 alt="Our workshop"
-                className="object-fill h-full w-full"
+                className="object-cover h-full w-full"
               />
             </div>
             <div className="flex flex-col justify-center">
