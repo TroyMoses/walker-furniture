@@ -20,7 +20,7 @@ export default function AboutPage() {
       />
 
       {/* Our History */}
-      <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
+      <section className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30">
         <div className="container">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             <div className="flex flex-col justify-center">
@@ -46,7 +46,7 @@ export default function AboutPage() {
                 innovation in furniture making.
               </p>
             </div>
-            <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
+            <div className="hidden md:block relative h-[400px] overflow-hidden rounded-lg shadow-md">
               <Image
                 width={800}
                 height={800}
@@ -60,7 +60,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Values */}
-      <section className="py-16 bg-gradient-to-b from-amber-50/30 to-white">
+      <section className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-amber-50/30 to-white">
         <div className="container">
           <SectionHeading
             title="Our Values"
@@ -120,7 +120,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Process */}
-      <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
+      <section className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30">
         <div className="container">
           <SectionHeading
             title="Our Crafting Process"
@@ -128,7 +128,7 @@ export default function AboutPage() {
           />
 
           <div className="relative">
-            <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 bg-amber-800/20 md:block"></div>
+            <div className="hidden md:absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 bg-amber-800/20 md:block"></div>
 
             <div className="space-y-12">
               {[
@@ -136,7 +136,7 @@ export default function AboutPage() {
                   title: "Material Selection",
                   description:
                     "We carefully select the finest hardwoods from sustainable sources, examining each piece for grain pattern, color, and structural integrity.",
-                  image: "/images/bg/bgimg1.jpg",
+                  image: "/images/bg/bgimg2.jpg",
                 },
                 {
                   title: "Design & Planning",
@@ -148,7 +148,7 @@ export default function AboutPage() {
                   title: "Crafting",
                   description:
                     "Our master craftsmen use both traditional hand tools and precision machinery to shape, join, and assemble each piece with meticulous attention to detail.",
-                  image: "/images/bg/bgimg1.jpg",
+                  image: "/images/bg/bgimg2.jpg",
                 },
                 {
                   title: "Finishing",
@@ -160,11 +160,11 @@ export default function AboutPage() {
                   title: "Quality Control",
                   description:
                     "Each piece undergoes rigorous inspection to ensure it meets our exacting standards for beauty, functionality, and durability.",
-                  image: "/images/bg/bgimg1.jpg",
+                  image: "/images/bg/bgimg2.jpg",
                 },
               ].map((step, index) => (
                 <div key={index} className="relative">
-                  <div className="absolute left-1/2 top-0 -mt-2 -translate-x-1/2 rounded-full bg-amber-800 p-2 md:block">
+                  <div className="hidden md:block absolute left-1/2 top-0 -mt-2 -translate-x-1/2 rounded-full bg-amber-800 p-2">
                     <div className="h-4 w-4 rounded-full bg-amber-800"></div>
                   </div>
 
@@ -198,7 +198,7 @@ export default function AboutPage() {
       {/* Our Team */}
       <section
         id="team"
-        className="py-16 bg-gradient-to-b from-amber-50/30 to-white"
+        className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-amber-50/30 to-white"
       >
         <div className="container">
           <SectionHeading
@@ -239,11 +239,10 @@ export default function AboutPage() {
               >
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    width={400}
-                    height={400}
+                    fill
                     src={member.image || "/images/testimonials/shuga.jpg"}
                     alt={member.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="h-full w-[300px] object-contain md:object-fill transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
                 <div className="p-4">
@@ -258,7 +257,7 @@ export default function AboutPage() {
       </section>
 
       {/* Join Our Team */}
-      <section className="bg-gradient-to-r from-amber-800 to-amber-700 py-16 text-white">
+      <section className="pt-16 pb-12 px-3 md:px-10 text-gray-700">
         <div className="container">
           <div className="flex flex-col items-center justify-between gap-8 text-center md:flex-row md:text-left">
             <div className="max-w-lg">
@@ -272,7 +271,7 @@ export default function AboutPage() {
             </div>
             <Button
               variant="outline"
-              className="border-white text-white hover:bg-white/10"
+              className="border-amber-800 text-gray-700 hover:bg-white/10"
               size="lg"
               asChild
             >
