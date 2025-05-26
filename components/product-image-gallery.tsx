@@ -29,7 +29,7 @@ export function ProductImageGallery({
         {images.map((image, index) => (
           <button
             key={index}
-            className={`relative aspect-square overflow-hidden rounded-md bg-white shadow-sm transition-all hover:opacity-80 ${
+            className={`cursor-pointer relative aspect-square overflow-hidden rounded-md bg-white shadow-sm transition-all hover:opacity-80 ${
               mainImage === image ? "ring-2 ring-amber-800" : ""
             }`}
             onClick={() => setMainImage(image)}

@@ -148,10 +148,10 @@ export default function Home() {
             </div>
             <div className="flex flex-col justify-center">
               <h2 className="mb-6 text-3xl font-bold text-center md:text-start">
-                About Exit Walker Furnitures
+                About Exit Exit Walker Furniture
               </h2>
               <p className="mb-4 text-gray-700">
-                Since 2017, Walker Furnitures has been crafting high-quality,
+                Since 2017, Exit Walker Furniture has been crafting high-quality,
                 sustainable furniture that stands the test of time. Our master
                 craftsmen combine traditional woodworking techniques with modern
                 design to create pieces that are both functional and beautiful.

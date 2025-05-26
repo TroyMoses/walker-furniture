@@ -1,6 +1,6 @@
 # Contributing to Exit Walker Furniture
 
-Thank you for your interest in contributing to Walker Furnitures! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Exit Walker Furniture! This document provides guidelines and information for contributors.
 
 ## 🤝 How to Contribute
 

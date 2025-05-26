@@ -127,6 +127,109 @@ const getProductData = (id: string) => {
         "Use placemats or tablecloths to prevent scratches",
       ],
     },
+    "walnut-bed-frame": {
+      id: "walnut-bed-frame",
+      name: "Walnut Bed Frame",
+      price: "$1,499",
+      description:
+        "Our Walnut Bed Frame showcases the rich, dark beauty of American black walnut. Handcrafted with precision joinery and a minimalist design that emphasizes the natural wood grain.",
+      longDescription:
+        "The Walnut Bed Frame represents the pinnacle of our woodworking craftsmanship. Made from sustainably sourced American black walnut, each frame showcases the wood's distinctive rich chocolate tones and striking grain patterns that make walnut one of the most prized furniture woods.\n\nOur master craftsmen use traditional mortise and tenon joinery reinforced with modern engineering to create a bed frame that's both beautiful and incredibly strong. The minimalist design philosophy lets the natural beauty of the walnut take center stage while providing a sophisticated foundation for your bedroom.\n\nThe headboard features a subtle live edge detail that adds organic character, while the platform base eliminates the need for a box spring. Hidden steel brackets provide additional support while maintaining the clean lines of the design. This bed frame will develop a beautiful patina over time, becoming even more stunning with age.",
+      rating: 4.9,
+      reviewCount: 97,
+      category: "Bedroom",
+      inStock: true,
+      isNew: false,
+      isBestseller: true,
+      images: [
+        "/placeholder.svg?height=600&width=600",
+        "/placeholder.svg?height=600&width=600",
+        "/placeholder.svg?height=600&width=600",
+        "/placeholder.svg?height=600&width=600",
+      ],
+      colors: ["Natural Walnut", "Dark Walnut", "Honey Walnut"],
+      specifications: [
+        { name: "Dimensions", value: 'King: 80"L x 76"W x 45"H' },
+        { name: "Headboard Height", value: "45 inches" },
+        { name: "Platform Height", value: "14 inches" },
+        { name: "Material", value: "Solid American Black Walnut" },
+        { name: "Finish", value: "Natural Oil Finish" },
+        {
+          name: "Joinery",
+          value: "Mortise and Tenon with Steel Reinforcement",
+        },
+        { name: "Weight Capacity", value: "1,200 lbs" },
+        { name: "Assembly", value: "Professional Assembly Recommended" },
+      ],
+      features: [
+        "Solid American black walnut construction",
+        "Traditional mortise and tenon joinery",
+        "Live edge headboard detail",
+        "Platform base eliminates need for box spring",
+        "Hidden steel reinforcement brackets",
+        "Natural oil finish enhances wood grain",
+        "Available in King, Queen, and Full sizes",
+        "10-year structural warranty",
+      ],
+      care: [
+        "Dust regularly with a soft, dry cloth",
+        "Apply furniture oil every 6-12 months",
+        "Avoid direct sunlight to prevent uneven aging",
+        "Use felt pads under lamps and accessories",
+        "Clean spills immediately with a damp cloth",
+        "Professional refinishing available if needed",
+      ],
+    },
+    "cherry-bookcase": {
+      id: "cherry-bookcase",
+      name: "Cherry Wood Bookcase",
+      price: "$749",
+      description:
+        "Our Cherry Wood Bookcase combines classic design with modern functionality. Featuring adjustable shelves and traditional craftsmanship in beautiful cherry wood.",
+      longDescription:
+        "The Cherry Wood Bookcase is a testament to timeless design and exceptional craftsmanship. Made from solid American cherry wood, this bookcase showcases the wood's warm reddish-brown tones and fine, straight grain that deepens and enriches with age.\n\nFeaturing five adjustable shelves, this bookcase can accommodate books of all sizes, decorative objects, and personal collections. The traditional design includes subtle crown molding at the top and a solid wood back panel that adds structural integrity while maintaining the classic appearance.\n\nOur craftsmen use traditional dado joints for the shelves and dovetail construction for the case, ensuring this piece will serve your family for generations. The natural cherry finish is hand-rubbed to a smooth, lustrous sheen that highlights the wood's natural beauty while providing protection against daily use.",
+      rating: 4.6,
+      reviewCount: 73,
+      category: "Living Room",
+      inStock: true,
+      isNew: false,
+      isBestseller: false,
+      images: [
+        "/placeholder.svg?height=600&width=600",
+        "/placeholder.svg?height=600&width=600",
+        "/placeholder.svg?height=600&width=600",
+        "/placeholder.svg?height=600&width=600",
+      ],
+      colors: ["Natural Cherry", "Dark Cherry", "Antique Cherry"],
+      specifications: [
+        { name: "Dimensions", value: '36"W x 14"D x 72"H' },
+        { name: "Shelf Count", value: "5 Adjustable Shelves" },
+        { name: "Shelf Spacing", value: "Adjustable 1-inch increments" },
+        { name: "Material", value: "Solid American Cherry" },
+        { name: "Back Panel", value: "Solid Wood" },
+        { name: "Finish", value: "Hand-rubbed Natural Finish" },
+        { name: "Weight", value: "85 lbs" },
+        { name: "Assembly", value: "Minimal Assembly Required" },
+      ],
+      features: [
+        "Solid American cherry construction",
+        "Five adjustable shelves",
+        "Traditional dado joint construction",
+        "Crown molding detail",
+        "Solid wood back panel",
+        "Hand-rubbed finish",
+        "Anti-tip safety hardware included",
+        "5-year warranty",
+      ],
+      care: [
+        "Dust weekly with a soft cloth",
+        "Polish monthly with quality furniture polish",
+        "Avoid placing in direct sunlight",
+        "Use coasters under plants and decorative items",
+        "Rotate books occasionally to prevent shelf sagging",
+        "Professional refinishing available",
+      ],
+    },
   };
 
   return products[id as keyof typeof products] || null;
@@ -168,8 +271,13 @@ const relatedProducts = [
   },
 ];
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = getProductData(params.id);
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const product = getProductData(id);
 
   if (!product) {
     return (
@@ -194,7 +302,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
       <Header />
 
-      <div className="container py-8">
+      <div className="container py-8 px-3 md:px-12">
         {/* Breadcrumbs */}
         <div className="mb-6 flex items-center text-sm text-gray-500">
           <Link href="/" className="hover:text-amber-800">
@@ -267,7 +375,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 {product.colors.map((color, index) => (
                   <button
                     key={index}
-                    className={`rounded-md border border-gray-300 px-4 py-2 text-sm transition-all hover:border-amber-800 ${
+                    className={`cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm transition-all hover:border-amber-800 ${
                       index === 0 ? "border-amber-800 bg-amber-50" : ""
                     }`}
                   >
@@ -284,7 +392,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-r-none"
+                  className="cursor-pointer rounded-r-none"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -294,7 +402,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-l-none"
+                  className="cursor-pointer rounded-l-none"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -316,13 +424,13 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
             {/* Action Buttons */}
             <div className="mb-6 flex flex-wrap gap-4">
-              <Button className="flex-1 gap-2 bg-amber-800 hover:bg-amber-900">
+              <Button className="cursor-pointer flex-1 gap-2 bg-amber-800 hover:bg-amber-900">
                 <ShoppingCart className="h-4 w-4" /> Add to Cart
               </Button>
-              <Button variant="outline" size="icon">
+              <Button className="cursor-pointer" variant="outline" size="icon">
                 <Heart className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon">
+              <Button className="cursor-pointer" variant="outline" size="icon">
                 <Share2 className="h-4 w-4" />
               </Button>
             </div>
@@ -340,37 +448,113 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        {/* Product Details Tabs */}
-        <div className="mt-16">
+        {/* Desktop Product Details Tabs */}
+        <div className="hidden md:block mt-16">
           <Tabs defaultValue="description">
             <TabsList className="w-full justify-start border-b bg-transparent p-0">
               <TabsTrigger
                 value="description"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="cursor-pointer rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 Description
               </TabsTrigger>
               <TabsTrigger
                 value="specifications"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="cursor-pointer rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 Specifications
               </TabsTrigger>
               <TabsTrigger
                 value="features"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="cursor-pointer rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 Features
               </TabsTrigger>
               <TabsTrigger
                 value="care"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="cursor-pointer rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 Care Instructions
               </TabsTrigger>
               <TabsTrigger
                 value="reviews"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="cursor-pointer rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              >
+                Reviews ({product.reviewCount})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="description" className="mt-6">
+              <div className="max-w-3xl space-y-4 text-gray-700">
+                {product.longDescription
+                  .split("\n\n")
+                  .map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="specifications" className="mt-6">
+              <ProductSpecifications specifications={product.specifications} />
+            </TabsContent>
+
+            <TabsContent value="features" className="mt-6">
+              <div className="max-w-3xl">
+                <ul className="space-y-2 text-gray-700">
+                  {product.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      <Star className="mr-2 h-5 w-5 flex-shrink-0 text-amber-800" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="care" className="mt-6">
+              <div className="max-w-3xl">
+                <ul className="space-y-2 text-gray-700">
+                  {product.care.map((instruction, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-800">
+                        {index + 1}
+                      </div>
+                      <span>{instruction}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-6" id="reviews">
+              <ProductReviews
+                productId={product.id}
+                rating={product.rating}
+                reviewCount={product.reviewCount}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Mobile Product Details Tabs */}
+        <div className="block md:hidden mt-16">
+          <Tabs defaultValue="description">
+            <TabsList className="w-full justify-start border-b bg-transparent p-0">
+              <TabsTrigger
+                value="description"
+                className="rounded-none border-b-2 border-transparent px-2 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              >
+                Description
+              </TabsTrigger>
+              <TabsTrigger
+                value="specifications"
+                className="rounded-none border-b-2 border-transparent px-2 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              >
+                Specifications
+              </TabsTrigger>
+              <TabsTrigger
+                value="reviews"
+                className="rounded-none border-b-2 border-transparent px-2 py-2 data-[state=active]:border-amber-800 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 Reviews ({product.reviewCount})
               </TabsTrigger>

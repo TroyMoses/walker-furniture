@@ -137,7 +137,7 @@ export default function ProductsPage() {
         primaryButtonText="Shop Now"
       />
 
-      <section className="py-12">
+      <section className="pt-12 pb-2 px-3 md:px-10">
         <div className="container">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <SectionHeading title="All Products" centered={false} />
@@ -166,7 +166,7 @@ export default function ProductsPage() {
                       Narrow down your product search with these filters.
                     </SheetDescription>
                   </SheetHeader>
-                  <div className="mt-6 space-y-6">
+                  <div className="mt-6 px-3 md:px-4 space-y-6">
                     <div className="space-y-3">
                       <h3 className="text-sm font-medium">Categories</h3>
                       {[
@@ -218,7 +218,7 @@ export default function ProductsPage() {
                     </div>
 
                     <div className="pt-4">
-                      <Button className="w-full bg-amber-800 hover:bg-amber-900">
+                      <Button className="cursor-pointer w-full bg-amber-800 hover:bg-amber-900">
                         Apply Filters
                       </Button>
                     </div>

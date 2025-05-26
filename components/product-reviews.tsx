@@ -68,7 +68,7 @@ export function ProductReviews({
       rating: 5,
       title: "Worth every penny",
       content:
-        "After searching for months for the perfect piece, I finally found it with Walker Furnitures. The attention to detail is remarkable, and you can tell this is built to last generations. The customer service was also excellent throughout the entire process. Highly recommend!",
+        "After searching for months for the perfect piece, I finally found it with Exit Walker Furniture. The attention to detail is remarkable, and you can tell this is built to last generations. The customer service was also excellent throughout the entire process. Highly recommend!",
       helpful: 18,
       unhelpful: 0,
       verified: true,
@@ -94,10 +94,10 @@ export function ProductReviews({
 
           <div className="space-y-2">
             {ratingDistribution.map((dist) => (
-              <div key={dist.stars} className="flex items-center gap-2">
-                <div className="w-12 text-sm">{dist.stars} stars</div>
+              <div key={dist.stars} className="flex items-center gap-1">
+                <div className="w-[70px] text-sm">{dist.stars} stars</div>
                 <Progress value={dist.percentage} className="h-2" />
-                <div className="w-10 text-right text-sm text-gray-500">
+                <div className="w-[24px] text-right text-sm text-gray-500">
                   {dist.count}
                 </div>
               </div>
@@ -105,7 +105,7 @@ export function ProductReviews({
           </div>
 
           <Button
-            className="mt-6 w-full bg-amber-800 hover:bg-amber-900"
+            className="mt-6 w-full bg-amber-800 hover:bg-amber-900 cursor-pointer"
             onClick={() => setShowReviewForm(!showReviewForm)}
           >
             Write a Review
@@ -185,10 +185,11 @@ export function ProductReviews({
                 </div>
 
                 <div className="flex gap-4">
-                  <Button className="bg-amber-800 hover:bg-amber-900">
+                  <Button className="cursor-pointer bg-amber-800 hover:bg-amber-900">
                     Submit Review
                   </Button>
                   <Button
+                    className="cursor-pointer"
                     variant="outline"
                     onClick={() => setShowReviewForm(false)}
                   >
@@ -234,16 +235,16 @@ export function ProductReviews({
 
                 <div className="mt-4 flex items-center gap-6">
                   <div className="flex items-center gap-1">
-                    <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-amber-800">
+                    <button className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 hover:text-amber-800">
                       <ThumbsUp className="h-4 w-4" /> {review.helpful}
                     </button>
                   </div>
                   <div className="flex items-center gap-1">
-                    <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-amber-800">
+                    <button className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 hover:text-amber-800">
                       <ThumbsDown className="h-4 w-4" /> {review.unhelpful}
                     </button>
                   </div>
-                  <button className="text-sm text-amber-800 hover:underline">
+                  <button className="cursor-pointer text-sm text-amber-800 hover:underline">
                     Report
                   </button>
                 </div>
@@ -254,7 +255,12 @@ export function ProductReviews({
           {/* Pagination */}
           <div className="mt-8 flex justify-center">
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon" disabled>
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                size="icon"
+                disabled
+              >
                 &lt;
               </Button>
               <Button
@@ -264,13 +270,13 @@ export function ProductReviews({
               >
                 1
               </Button>
-              <Button variant="outline" size="icon">
+              <Button className="cursor-pointer" variant="outline" size="icon">
                 2
               </Button>
-              <Button variant="outline" size="icon">
+              <Button className="cursor-pointer" variant="outline" size="icon">
                 3
               </Button>
-              <Button variant="outline" size="icon">
+              <Button className="cursor-pointer" variant="outline" size="icon">
                 &gt;
               </Button>
             </div>
