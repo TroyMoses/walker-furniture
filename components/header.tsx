@@ -127,7 +127,7 @@ export function Header() {
             Sign In
           </Button>
           <Button className="bg-amber-800 hover:bg-amber-900 cursor-pointer">
-            Shop Now
+            Order Now
           </Button>
         </div>
       </div>

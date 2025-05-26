@@ -134,7 +134,7 @@ export default function ProductsPage() {
         title="Our Furniture Collection"
         description="Browse our complete collection of handcrafted furniture pieces designed for comfort, style, and durability."
         imageSrc="/images/bg/bgimg2.jpg"
-        primaryButtonText="Shop Now"
+        primaryButtonText="Order Now"
       />
 
       <section className="pt-12 pb-2 px-3 md:px-10">
