@@ -51,8 +51,8 @@ export function Footer() {
               <div>
                 <p className="mb-2">Industrial Area, Kampala.</p>
                 <p>
-                  <a href="tel:+256123456789" className="mb-4">
-                    +256 123 456 789
+                  <a href="tel:+256757601694" className="mb-4">
+                    +256 757 601694
                   </a>
                 </p>
                 <p>
@@ -82,28 +82,28 @@ export function Footer() {
               <h3 className="mb-4 text-lg font-bold text-white">About Us</h3>
               <ul className="space-y-2">
                 <li>
+                  <Link href="/" className="hover:text-amber-800">
+                    Home
+                  </Link>
+                </li>
+                <li>
                   <Link href="/about" className="hover:text-amber-800">
                     Our Story
                   </Link>
                 </li>
                 <li>
-                  <Link href="/craftsmen" className="hover:text-amber-800">
-                    Craftsmen
+                  <Link href="/products" className="hover:text-amber-800">
+                    Products
                   </Link>
                 </li>
                 <li>
-                  <Link href="/sustainability" className="hover:text-amber-800">
-                    Sustainability
+                  <Link href="/testimonials" className="hover:text-amber-800">
+                    Testimonials
                   </Link>
                 </li>
                 <li>
-                  <Link href="/showrooms" className="hover:text-amber-800">
-                    Showrooms
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/careers" className="hover:text-amber-800">
-                    Careers
+                  <Link href="/contact" className="hover:text-amber-800">
+                    Contact Us
                   </Link>
                 </li>
               </ul>
@@ -204,8 +204,8 @@ export function Footer() {
               <div>
                 <p className="mb-2">Industrial Area, Kampala.</p>
                 <p>
-                  <a href="tel:+256123456789" className="mb-4">
-                    +256 123 456 789
+                  <a href="tel:+256757601694" className="mb-4">
+                    +256 757 601694
                   </a>
                 </p>
                 <p>
@@ -237,31 +237,28 @@ export function Footer() {
                 <h3 className="mb-4 text-lg font-bold text-white">About Us</h3>
                 <ul className="space-y-2">
                   <li>
+                    <Link href="/" className="hover:text-amber-800">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/about" className="hover:text-amber-800">
                       Our Story
                     </Link>
                   </li>
                   <li>
-                    <Link href="/craftsmen" className="hover:text-amber-800">
-                      Craftsmen
+                    <Link href="/products" className="hover:text-amber-800">
+                      Products
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/sustainability"
-                      className="hover:text-amber-800"
-                    >
-                      Sustainability
+                    <Link href="/testimonials" className="hover:text-amber-800">
+                      Testimonials
                     </Link>
                   </li>
                   <li>
-                    <Link href="/showrooms" className="hover:text-amber-800">
-                      Showrooms
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/careers" className="hover:text-amber-800">
-                      Careers
+                    <Link href="/contact" className="hover:text-amber-800">
+                      Contact Us
                     </Link>
                   </li>
                 </ul>

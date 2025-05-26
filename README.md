@@ -1,8 +1,8 @@
-# Walker Furnitures
+# Exit Walker Furniture
 
 A modern, responsive e-commerce website for a premium furniture store built with Next.js, TypeScript, and Tailwind CSS. Features elegant animations, comprehensive product pages, and a warm, cozy design aesthetic.
 
-![Walker Furnitures Homepage](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![Exit Walker Furniture Homepage](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css)
 
@@ -355,6 +355,6 @@ For support, email exitwalkerfurniture@gmail.com or create an issue in this repo
 
 ---
 
-**Walker Furnitures** - Crafting Comfort for Your Home 🏠✨
+**Exit Walker Furniture** - Crafting Comfort for Your Home 🏠✨
 \`\`\`
 

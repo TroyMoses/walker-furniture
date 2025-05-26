@@ -13,7 +13,7 @@ export default function AboutPage() {
 
       <HeroSection
         title="Our Story"
-        description="Discover the passion and craftsmanship behind Walker Furnitures."
+        description="Discover the passion and craftsmanship behind Exit Walker Furniture."
         imageSrc="/images/bg/bgimg1.jpg"
         primaryButtonText="Meet Our Team"
         primaryButtonHref="#team"
@@ -26,7 +26,7 @@ export default function AboutPage() {
             <div className="flex flex-col justify-center">
               <h2 className="mb-6 text-3xl font-bold">Our History</h2>
               <p className="mb-4 text-gray-700">
-                Walker Furnitures was founded in 1985 by James Walker, a
+                Exit Walker Furniture was founded in 2017 by Wanjala Abel, a
                 third-generation woodworker with a passion for creating
                 beautiful, functional furniture. What began as a small workshop
                 in his garage has grown into a renowned furniture company with a
@@ -40,7 +40,7 @@ export default function AboutPage() {
                 through generations.
               </p>
               <p className="text-gray-700">
-                Today, Walker Furnitures continues to be family-owned and
+                Today, Exit Walker Furniture continues to be family-owned and
                 operated, with James{"'"}s children and a team of skilled
                 artisans carrying forward his legacy of excellence and
                 innovation in furniture making.

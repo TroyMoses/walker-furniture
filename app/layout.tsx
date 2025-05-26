@@ -9,7 +9,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Walker Furnitures - Quality Handcrafted Furniture",
+  title: "Exit Walker Furniture - Quality Handcrafted Furniture",
   description:
     "Discover our collection of handcrafted furniture designed to bring elegance and comfort to your living spaces.",
 };

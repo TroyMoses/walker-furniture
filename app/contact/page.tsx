@@ -20,7 +20,7 @@ export default function ContactPage() {
         primaryButtonHref="#showroom"
       />
 
-      <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
+      <section className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30">
         <div className="container">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             <div>
@@ -52,7 +52,11 @@ export default function ContactPage() {
                     <Phone className="h-6 w-6 text-amber-800" />
                     <div>
                       <h3 className="font-medium">Call Us</h3>
-                      <p className="text-gray-700">(555) 123-4567</p>
+                      <p className="text-gray-700">
+                        <a href="tel:+256757601694" className="mb-4">
+                          +256 757 601694
+                        </a>
+                      </p>
                       <p className="text-sm text-gray-500">
                         Customer service available Mon-Fri, 9am-5pm
                       </p>
@@ -65,7 +69,11 @@ export default function ContactPage() {
                     <Mail className="h-6 w-6 text-amber-800" />
                     <div>
                       <h3 className="font-medium">Email Us</h3>
-                      <p className="text-gray-700">info@walkerfurnitures.com</p>
+                      <p className="text-gray-700">
+                        <a href="mailto:exitwalkerfurniture@gmail.com">
+                          exitwalkerfurniture@gmail.com
+                        </a>
+                      </p>
                       <p className="text-sm text-gray-500">
                         We typically respond within 24 hours
                       </p>
@@ -197,7 +205,7 @@ export default function ContactPage() {
       {/* Showroom */}
       <section
         id="showroom"
-        className="py-16 bg-gradient-to-b from-amber-50/30 to-white"
+        className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-amber-50/30 to-white"
       >
         <div className="container">
           <SectionHeading
@@ -211,7 +219,7 @@ export default function ContactPage() {
                 width={800}
                 height={800}
                 src="/images/bg/bgimg1.jpg"
-                alt="Walker Furnitures Showroom"
+                alt="Exit Walker Furniture Showroom"
                 className="h-full w-full object-cover"
               />
             </div>
