@@ -147,27 +147,27 @@ export function ReviewsManagement() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48">
+          <SelectTrigger className="w-full sm:w-48 cursor-pointer">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Reviews</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">All Reviews</SelectItem>
+            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
+            <SelectItem value="approved" className="cursor-pointer">Approved</SelectItem>
+            <SelectItem value="rejected" className="cursor-pointer">Rejected</SelectItem>
           </SelectContent>
         </Select>
         <Select value={ratingFilter} onValueChange={setRatingFilter}>
-          <SelectTrigger className="w-full sm:w-32">
+          <SelectTrigger className="w-full sm:w-32 cursor-pointer">
             <SelectValue placeholder="Rating" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Ratings</SelectItem>
-            <SelectItem value="5">5 Stars</SelectItem>
-            <SelectItem value="4">4 Stars</SelectItem>
-            <SelectItem value="3">3 Stars</SelectItem>
-            <SelectItem value="2">2 Stars</SelectItem>
-            <SelectItem value="1">1 Star</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">All Ratings</SelectItem>
+            <SelectItem value="5" className="cursor-pointer">5 Stars</SelectItem>
+            <SelectItem value="4" className="cursor-pointer">4 Stars</SelectItem>
+            <SelectItem value="3" className="cursor-pointer">3 Stars</SelectItem>
+            <SelectItem value="2" className="cursor-pointer">2 Stars</SelectItem>
+            <SelectItem value="1" className="cursor-pointer">1 Star</SelectItem>
           </SelectContent>
         </Select>
       </div>

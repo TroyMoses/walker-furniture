@@ -136,15 +136,25 @@ export function ContactsManagement() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48">
+          <SelectTrigger className="w-full sm:w-48 cursor-pointer">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Contacts</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="in-progress">In Progress</SelectItem>
-            <SelectItem value="resolved">Resolved</SelectItem>
-            <SelectItem value="closed">Closed</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">
+              All Contacts
+            </SelectItem>
+            <SelectItem value="new" className="cursor-pointer">
+              New
+            </SelectItem>
+            <SelectItem value="in-progress" className="cursor-pointer">
+              In Progress
+            </SelectItem>
+            <SelectItem value="resolved" className="cursor-pointer">
+              Resolved
+            </SelectItem>
+            <SelectItem value="closed" className="cursor-pointer">
+              Closed
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
