@@ -18,6 +18,9 @@ import {
   MessageSquare,
   TrendingUp,
   Plus,
+  LayoutDashboard,
+  Star,
+  Quote,
 } from "lucide-react";
 
 import { Header } from "@/components/header";
@@ -56,13 +59,32 @@ export function AdminDashboard() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview" className="cursor-pointer">Overview</TabsTrigger>
-            <TabsTrigger value="orders" className="cursor-pointer">Orders</TabsTrigger>
-            <TabsTrigger value="products" className="cursor-pointer">Products</TabsTrigger>
-            <TabsTrigger value="contacts" className="cursor-pointer">Contacts</TabsTrigger>
-            <TabsTrigger value="reviews" className="cursor-pointer">Reviews</TabsTrigger>
-            <TabsTrigger value="testimonials" className="cursor-pointer">Testimonials</TabsTrigger>
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <LayoutDashboard className="h-4 w-4" />
+              <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="flex items-center gap-2">
+              <ShoppingCart className="h-4 w-4" />
+              <span className="hidden sm:inline">Orders</span>
+            </TabsTrigger>
+            <TabsTrigger value="products" className="flex items-center gap-2">
+              <Package className="h-4 w-4" />
+              <span className="hidden sm:inline">Products</span>
+            </TabsTrigger>
+            <TabsTrigger value="contacts" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              <span className="hidden sm:inline">Contacts</span>
+            </TabsTrigger>
+            <TabsTrigger value="reviews" className="flex items-center gap-2">
+              <Star className="h-4 w-4" />
+              <span className="hidden sm:inline">Reviews</span>
+            </TabsTrigger>
+            <TabsTrigger value="testimonials" className="flex items-center gap-2">
+              <Quote className="h-4 w-4" />
+              <span className="hidden sm:inline">Testimonials</span>
+            </TabsTrigger>
           </TabsList>
+
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               <Card>
