@@ -59,27 +59,27 @@ export function AdminDashboard() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+            <TabsTrigger value="overview" className="flex items-center gap-2 cursor-pointer">
               <LayoutDashboard className="h-4 w-4" />
               <span className="hidden sm:inline">Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="orders" className="flex items-center gap-2">
+            <TabsTrigger value="orders" className="flex items-center gap-2 cursor-pointer">
               <ShoppingCart className="h-4 w-4" />
               <span className="hidden sm:inline">Orders</span>
             </TabsTrigger>
-            <TabsTrigger value="products" className="flex items-center gap-2">
+            <TabsTrigger value="products" className="flex items-center gap-2 cursor-pointer">
               <Package className="h-4 w-4" />
               <span className="hidden sm:inline">Products</span>
             </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex items-center gap-2">
+            <TabsTrigger value="contacts" className="flex items-center gap-2 cursor-pointer">
               <MessageSquare className="h-4 w-4" />
               <span className="hidden sm:inline">Contacts</span>
             </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex items-center gap-2">
+            <TabsTrigger value="reviews" className="flex items-center gap-2 cursor-pointer">
               <Star className="h-4 w-4" />
               <span className="hidden sm:inline">Reviews</span>
             </TabsTrigger>
-            <TabsTrigger value="testimonials" className="flex items-center gap-2">
+            <TabsTrigger value="testimonials" className="flex items-center gap-2 cursor-pointer">
               <Quote className="h-4 w-4" />
               <span className="hidden sm:inline">Testimonials</span>
             </TabsTrigger>
