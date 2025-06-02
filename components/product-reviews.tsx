@@ -1,5 +1,8 @@
 "use client";
 
+import type React from "react";
+import type { Id } from "@/convex/_generated/dataModel";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,18 +13,21 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 interface ProductReviewsProps {
-  productId: string;
+  productId: Id<"products">;
   rating: number;
   reviewCount: number;
 }
 
 export function ProductReviews({
-  //   productId,
+  productId,
   rating,
   reviewCount,
 }: ProductReviewsProps) {
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const createReview = useMutation(api.reviews.createReview);
 
   // Mock review distribution data
   const ratingDistribution = [
@@ -75,6 +81,27 @@ export function ProductReviews({
     },
   ];
 
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    try {
+      await createReview({
+        productId: productId,
+        rating: Number.parseInt(formData.get("rating") as string),
+        title: formData.get("title") as string,
+        comment: formData.get("content") as string,
+      });
+
+      // Reset form and show success message
+      setShowReviewForm(false);
+      // You might want to add a toast notification here
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      // Handle error - show error message
+    }
+  };
+
   return (
     <div className="max-w-4xl">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -117,7 +144,7 @@ export function ProductReviews({
           {showReviewForm && (
             <div className="mb-8 rounded-lg bg-gradient-to-r from-white to-amber-50 p-6 shadow-sm">
               <h3 className="mb-4 text-lg font-semibold">Write Your Review</h3>
-              <form className="space-y-4">
+              <form onSubmit={handleSubmitReview} className="space-y-4">
                 <div>
                   <Label htmlFor="review-rating">Your Rating</Label>
                   <div className="mt-1 flex items-center gap-1">
@@ -143,12 +170,14 @@ export function ProductReviews({
                       </button>
                     ))}
                   </div>
+                  <input type="hidden" id="rating" name="rating" />
                 </div>
 
                 <div>
                   <Label htmlFor="review-title">Review Title</Label>
                   <Input
                     id="review-title"
+                    name="title"
                     className="mt-1"
                     placeholder="Summarize your experience"
                   />
@@ -158,6 +187,7 @@ export function ProductReviews({
                   <Label htmlFor="review-content">Your Review</Label>
                   <Textarea
                     id="review-content"
+                    name="content"
                     className="mt-1"
                     rows={4}
                     placeholder="What did you like or dislike? How was the quality and comfort?"
