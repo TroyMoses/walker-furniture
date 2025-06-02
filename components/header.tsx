@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, ShoppingCart, User, Settings } from "lucide-react";
+import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,24 +14,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useMobile } from "@/hooks/use-mobile";
-import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
 import Image from "next/image";
 
 export function Header() {
-  const { user } = useUser();
-
-  // Get the user from Convex database
-  const convexUser = useQuery(
-    api.users.getUserByClerkId,
-    user?.id ? { clerkId: user.id } : "skip"
-  );
-
-  // Check user roles from Convex database
-  const isAdmin = convexUser?.role === "admin";
-
   const isMobile = useMobile();
+  const { isSignedIn } = useUser();
+  const currentUser = useQuery(api.users.getMe);
+
+  const isAdmin = currentUser?.role === "admin";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-amber-50 to-white">
@@ -113,15 +106,20 @@ export function Header() {
               </nav>
               <SheetFooter>
                 <div className="flex flex-col gap-4 mt-8">
-                  <Button
-                    variant="outline"
-                    className="border-amber-800 cursor-pointer"
-                  >
-                    Sign In
-                  </Button>
-                  <Button className="bg-amber-800 hover:bg-amber-900 cursor-pointer">
-                    Admin
-                  </Button>
+                  <SignInButton mode="modal">
+                    <Button variant="outline" className="gap-2 cursor-pointer">
+                      <User className="h-4 w-4" />
+                      <span className="hidden md:inline">Sign In</span>
+                    </Button>
+                  </SignInButton>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="text-sm font-medium hover:text-amber-800"
+                    >
+                      Admin
+                    </Link>
+                  )}
                 </div>
               </SheetFooter>
             </SheetContent>
@@ -159,18 +157,39 @@ export function Header() {
         )}
 
         <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            className="hidden border-amber-800 md:flex cursor-pointer"
-          >
-            Sign In
-          </Button>
-          <Button className="bg-amber-800 hover:bg-amber-900 cursor-pointer">
-            Order Now
-          </Button>
-          <Button className="hidden md:block bg-amber-800 hover:bg-amber-900 cursor-pointer">
-            Admin
-          </Button>
+          {isSignedIn ? (
+            <>
+              {!isAdmin && (
+                <Button variant="outline" className="gap-2" asChild>
+                  <Link href="/cart">
+                    <ShoppingCart className="h-4 w-4" />
+                    <span className="hidden md:inline">Cart</span>
+                  </Link>
+                </Button>
+              )}
+              {isAdmin && (
+                <Button variant="outline" className="gap-2" asChild>
+                  <Link href="/admin">
+                    <Settings className="h-4 w-4" />
+                    <span className="hidden md:inline">Admin</span>
+                  </Link>
+                </Button>
+              )}
+              <UserButton afterSignOutUrl="/" />
+            </>
+          ) : (
+            <>
+              <SignInButton mode="modal">
+                <Button variant="outline" className="gap-2 cursor-pointer">
+                  <User className="h-4 w-4" />
+                  <span className="hidden md:inline">Sign In</span>
+                </Button>
+              </SignInButton>
+              <Button className="bg-amber-800 hover:bg-amber-900" asChild>
+                <Link href="/products">Order Now</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
