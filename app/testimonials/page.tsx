@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -26,7 +26,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function TestimonialsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
+
   const submitTestimonial = useMutation(api.testimonials.createTestimonial);
+
+  // Fetch all approved testimonials
+  const allTestimonials =
+    useQuery(api.testimonials.getApprovedTestimonials, {}) || [];
+
+  // Filter testimonials by category
+  const getFilteredTestimonials = (category: string) => {
+    if (category === "all") return allTestimonials;
+    return allTestimonials.filter(
+      (t) => t.category.toLowerCase().replace(" ", "-") === category
+    );
+  };
 
   const handleTestimonialSubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -55,73 +69,10 @@ export default function TestimonialsPage() {
     }
   };
 
-  // Mock testimonial data
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      quote:
-        "The quality of our dining table is exceptional. It's become the centerpiece of our home where we gather for family meals. The craftsmanship is evident in every detail, and the finish is even more beautiful in person than in the photos.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 5.0,
-      category: "Dining",
-    },
-    {
-      name: "Michael Chen",
-      quote:
-        "I've purchased furniture from many stores, but Walker's craftsmanship is unmatched. Their attention to detail is evident in every piece. The bedroom set we ordered has transformed our space into a luxurious retreat. Worth every penny!",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 4.7,
-      category: "Bedroom",
-    },
-    {
-      name: "Emily Rodriguez",
-      quote:
-        "The custom bookshelf they built fits perfectly in our living room. The team was professional from design to delivery. They listened to our needs and created exactly what we envisioned, with some thoughtful suggestions that made the final piece even better.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 4.9,
-      category: "Living Room",
-    },
-    {
-      name: "David Thompson",
-      quote:
-        "Our Walker coffee table is not just functional but a true work of art. The wood grain is stunning, and the craftsmanship is impeccable. We receive compliments from everyone who visits our home.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 5.0,
-      category: "Living Room",
-    },
-    {
-      name: "Jennifer Lee",
-      quote:
-        "The office desk I purchased has made working from home a joy. It's sturdy, beautiful, and perfectly sized for my space. The drawers slide smoothly, and the finish is resistant to scratches and water marks.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 4.8,
-      category: "Office",
-    },
-    {
-      name: "Robert Garcia",
-      quote:
-        "We furnished our entire dining room with Walker pieces, and the cohesive look is stunning. The chairs are comfortable for long dinner parties, and the table expands easily to accommodate extra guests.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 4.9,
-      category: "Dining",
-    },
-    {
-      name: "James Miller",
-      quote:
-        "Our king bed frame is not only gorgeous but incredibly sturdy. No squeaks or wobbles, even after years of use. The headboard design is exactly what we wanted - elegant but not overstated.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 4.8,
-      category: "Bedroom",
-    },
-    {
-      name: "Sophia Brown",
-      quote:
-        "The customer service at Exit Walker Furniture is as exceptional as their products. When we had a small issue with our delivery, they resolved it immediately and with genuine care for our satisfaction.",
-      image: "/images/testimonials/shuga.jpg",
-      rating: 4.7,
-      category: "Service",
-    },
-  ];
+  // Get unique categories from testimonials
+  const categories = Array.from(
+    new Set(allTestimonials.map((t) => t.category))
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
@@ -142,102 +93,75 @@ export default function TestimonialsPage() {
             subtitle="Real experiences from real customers"
           />
 
-          <Tabs defaultValue="all" className="mb-8">
-            <TabsList className="mx-auto">
-              <TabsTrigger value="all" className="cursor-pointer">
-                All
-              </TabsTrigger>
-              <TabsTrigger value="living-room" className="cursor-pointer">
-                Living
-              </TabsTrigger>
-              <TabsTrigger value="bedroom" className="cursor-pointer">
-                Bedroom
-              </TabsTrigger>
-              <TabsTrigger value="dining" className="cursor-pointer">
-                Dining
-              </TabsTrigger>
-              <TabsTrigger value="office" className="cursor-pointer">
-                Office
-              </TabsTrigger>
-            </TabsList>
+          {allTestimonials.length > 0 ? (
+            <Tabs
+              value={activeCategory}
+              onValueChange={setActiveCategory}
+              className="mb-8"
+            >
+              <TabsList className="mx-auto">
+                <TabsTrigger value="all">
+                  All ({allTestimonials.length})
+                </TabsTrigger>
+                {categories.map((category) => {
+                  const categoryKey = category.toLowerCase().replace(" ", "-");
+                  const count = getFilteredTestimonials(categoryKey).length;
+                  return (
+                    <TabsTrigger key={categoryKey} value={categoryKey}>
+                      {category} ({count})
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
 
-            <TabsContent value="all" className="mt-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {testimonials.map((testimonial, index) => (
-                  <TestimonialCard
-                    key={index}
-                    name={testimonial.name}
-                    quote={testimonial.quote}
-                    image={testimonial.image}
-                    rating={testimonial.rating}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="living-room" className="mt-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {testimonials
-                  .filter((t) => t.category === "Living Room")
-                  .map((testimonial, index) => (
+              <TabsContent value="all" className="mt-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {allTestimonials.map((testimonial) => (
                     <TestimonialCard
-                      key={index}
-                      name={testimonial.name}
-                      quote={testimonial.quote}
-                      image={testimonial.image}
+                      key={testimonial._id}
+                      name={testimonial.customerName}
+                      quote={testimonial.content}
                       rating={testimonial.rating}
                     />
                   ))}
-              </div>
-            </TabsContent>
+                </div>
+              </TabsContent>
 
-            <TabsContent value="bedroom" className="mt-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {testimonials
-                  .filter((t) => t.category === "Bedroom")
-                  .map((testimonial, index) => (
-                    <TestimonialCard
-                      key={index}
-                      name={testimonial.name}
-                      quote={testimonial.quote}
-                      image={testimonial.image}
-                      rating={testimonial.rating}
-                    />
-                  ))}
-              </div>
-            </TabsContent>
+              {categories.map((category) => {
+                const categoryKey = category.toLowerCase().replace(" ", "-");
+                const filteredTestimonials =
+                  getFilteredTestimonials(categoryKey);
 
-            <TabsContent value="dining" className="mt-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {testimonials
-                  .filter((t) => t.category === "Dining")
-                  .map((testimonial, index) => (
-                    <TestimonialCard
-                      key={index}
-                      name={testimonial.name}
-                      quote={testimonial.quote}
-                      image={testimonial.image}
-                      rating={testimonial.rating}
-                    />
-                  ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="office" className="mt-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {testimonials
-                  .filter((t) => t.category === "Office")
-                  .map((testimonial, index) => (
-                    <TestimonialCard
-                      key={index}
-                      quote={testimonial.quote}
-                      image={testimonial.image}
-                      rating={testimonial.rating}
-                    />
-                  ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+                return (
+                  <TabsContent
+                    key={categoryKey}
+                    value={categoryKey}
+                    className="mt-6"
+                  >
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                      {filteredTestimonials.map((testimonial) => (
+                        <TestimonialCard
+                          key={testimonial._id}
+                          name={testimonial.customerName}
+                          quote={testimonial.content}
+                          rating={testimonial.rating}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+                );
+              })}
+            </Tabs>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">
+                No testimonials available yet.
+              </p>
+              <p className="text-gray-400 mt-2">
+                Be the first to share your experience!
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -345,27 +269,11 @@ export default function TestimonialsPage() {
                       <SelectValue placeholder="Select product category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem
-                        value="Living Room"
-                        className="cursor-pointer"
-                      >
-                        Living Room
-                      </SelectItem>
-                      <SelectItem value="Bedroom" className="cursor-pointer">
-                        Bedroom
-                      </SelectItem>
-                      <SelectItem
-                        value="Dining Room"
-                        className="cursor-pointer"
-                      >
-                        Dining Room
-                      </SelectItem>
-                      <SelectItem value="Office" className="cursor-pointer">
-                        Office
-                      </SelectItem>
-                      <SelectItem value="Outdoor" className="cursor-pointer">
-                        Outdoor
-                      </SelectItem>
+                      <SelectItem value="Living Room" className="cursor-pointer">Living Room</SelectItem>
+                      <SelectItem value="Bedroom" className="cursor-pointer">Bedroom</SelectItem>
+                      <SelectItem value="Dining Room" className="cursor-pointer">Dining Room</SelectItem>
+                      <SelectItem value="Office" className="cursor-pointer">Office</SelectItem>
+                      <SelectItem value="Outdoor" className="cursor-pointer">Outdoor</SelectItem>
                       <SelectItem value="General" className="cursor-pointer">
                         General Experience
                       </SelectItem>

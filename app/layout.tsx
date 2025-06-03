@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import { CartProvider } from "@/components/cart-provider";
+import { Toaster } from "sonner";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -9,9 +11,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Exit Walker Furniture - Quality Handcrafted Furniture",
+  title: "Exit Walker Furniture - Handcrafted Quality Furniture",
   description:
-    "Discover our collection of handcrafted furniture designed to bring elegance and comfort to your living spaces.",
+    "Discover our collection of handcrafted furniture pieces designed for comfort, style, and durability. From sofas to dining sets, find the perfect piece for your home.",
 };
 
 export default function RootLayout({
@@ -22,7 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ConvexClientProvider>
+          <CartProvider>
+            {children}
+            <Toaster position="top-right" />
+          </CartProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );

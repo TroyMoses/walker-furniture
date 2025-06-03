@@ -1,3 +1,7 @@
+"use client";
+
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
@@ -24,107 +28,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
 export default function ProductsPage() {
-  // Mock product data
-  const products = [
-    {
-      id: "oakwood-sofa",
-      name: "Oakwood Sofa",
-      price: "$1,299",
-      image: "/images/couches/couches.jpeg",
-      rating: 4.8,
-      category: "Living Room",
-    },
-    {
-      id: "maple-dining-table",
-      name: "Maple Dining Table",
-      price: "$899",
-      image: "/images/dining/diningtable3.jpeg",
-      rating: 4.5,
-      category: "Dining",
-    },
-    {
-      id: "walnut-bed-frame",
-      name: "Walnut Bed Frame",
-      price: "$1,499",
-      image: "/images/beds/bed4.jpeg",
-      rating: 4.9,
-      category: "Bedroom",
-    },
-    {
-      id: "cherry-bookcase",
-      name: "Cherry Wood Bookcase",
-      price: "$749",
-      image: "/images/library/library.jpeg",
-      rating: 4.6,
-      category: "Living Room",
-    },
-    {
-      id: "teak-coffee-table",
-      name: "Teak Coffee Table",
-      price: "$499",
-      image: "/images/dining/diningtable3.jpeg",
-      rating: 4.3,
-      category: "Living Room",
-    },
-    {
-      id: "mahogany-dresser",
-      name: "Mahogany Dresser",
-      price: "$1,199",
-      image: "/images/mirrors/dressingmirror.jpeg",
-      rating: 4.7,
-      category: "Bedroom",
-    },
-    {
-      id: "oak-dining-chairs",
-      name: "Oak Dining Chairs (Set of 4)",
-      price: "$799",
-      image: "/images/dining/diningtable.jpeg",
-      rating: 4.4,
-      category: "Dining",
-    },
-    {
-      id: "pine-nightstand",
-      name: "Pine Nightstand",
-      price: "$349",
-      image: "/images/beds/bedlamp.jpeg",
-      rating: 4.2,
-      category: "Bedroom",
-    },
-    {
-      id: "walnut-chair",
-      name: "Walnut Chair",
-      price: "$899",
-      image: "/images/chairs/chair.jpeg",
-      rating: 4.8,
-      category: "Office",
-    },
-    {
-      id: "baby-crib",
-      name: "Baby Crib",
-      price: "$1,099",
-      image: "/images/beds/babycrib.jpeg",
-      rating: 4.9,
-      category: "Living Room",
-    },
-    {
-      id: "teak-outdoor-set",
-      name: "Teak Outdoor Dining Set",
-      price: "$1,899",
-      image: "/images/dining/diningtable.jpeg",
-      rating: 4.7,
-      category: "Outdoor",
-    },
-    {
-      id: "bamboo-shelf",
-      name: "Bamboo Bookshelf",
-      price: "$599",
-      image: "/images/library/library1.jpeg",
-      rating: 4.5,
-      category: "Living Room",
-    },
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [minRating, setMinRating] = useState<number | undefined>(undefined);
+  const [sortBy, setSortBy] = useState("featured");
+
+  const products = useQuery(api.products.getAllProducts, {
+    search: searchTerm || undefined,
+    category: categoryFilter !== "all" ? categoryFilter : undefined,
+    minPrice: priceRange[0],
+    maxPrice: priceRange[1],
+    minRating,
+    sortBy,
+  });
+
+  console.log("Products fetched:", products);
+
+  const categories = [
+    "Living Room",
+    "Bedroom",
+    "Dining",
+    "Office",
+    "Outdoor",
+    "Storage",
+    "Lighting",
+    "Decor",
   ];
+
+  if (!products) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
+        <Header />
+        <div className="container py-20 text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-64 mx-auto"></div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
@@ -149,6 +97,8 @@ export default function ProductsPage() {
                   type="search"
                   placeholder="Search products..."
                   className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
 
@@ -169,18 +119,18 @@ export default function ProductsPage() {
                   <div className="mt-6 px-3 md:px-4 space-y-6">
                     <div className="space-y-3">
                       <h3 className="text-sm font-medium">Categories</h3>
-                      {[
-                        "Living Room",
-                        "Bedroom",
-                        "Dining",
-                        "Office",
-                        "Outdoor",
-                      ].map((category) => (
+                      {categories.map((category) => (
                         <div
                           key={category}
                           className="flex items-center space-x-2"
                         >
-                          <Checkbox id={`category-${category}`} />
+                          <Checkbox
+                            id={`category-${category}`}
+                            checked={categoryFilter === category}
+                            onCheckedChange={(checked) => {
+                              setCategoryFilter(checked ? category : "all");
+                            }}
+                          />
                           <Label htmlFor={`category-${category}`}>
                             {category}
                           </Label>
@@ -191,14 +141,15 @@ export default function ProductsPage() {
                     <div className="space-y-3">
                       <h3 className="text-sm font-medium">Price Range</h3>
                       <Slider
-                        defaultValue={[0, 2000]}
+                        value={priceRange}
+                        onValueChange={setPriceRange}
                         min={0}
                         max={5000}
                         step={100}
                       />
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">$0</span>
-                        <span className="text-sm">$5,000+</span>
+                        <span className="text-sm">${priceRange[0]}</span>
+                        <span className="text-sm">${priceRange[1]}+</span>
                       </div>
                     </div>
 
@@ -209,7 +160,13 @@ export default function ProductsPage() {
                           key={rating}
                           className="flex items-center space-x-2"
                         >
-                          <Checkbox id={`rating-${rating}`} />
+                          <Checkbox
+                            id={`rating-${rating}`}
+                            checked={minRating === rating}
+                            onCheckedChange={(checked) => {
+                              setMinRating(checked ? rating : undefined);
+                            }}
+                          />
                           <Label htmlFor={`rating-${rating}`}>
                             {rating}+ Stars
                           </Label>
@@ -218,7 +175,12 @@ export default function ProductsPage() {
                     </div>
 
                     <div className="pt-4">
-                      <Button className="cursor-pointer w-full bg-amber-800 hover:bg-amber-900">
+                      <Button
+                        className="cursor-pointer w-full bg-amber-800 hover:bg-amber-900"
+                        onClick={() => {
+                          // Filters are applied automatically through state
+                        }}
+                      >
                         Apply Filters
                       </Button>
                     </div>
@@ -226,7 +188,7 @@ export default function ProductsPage() {
                 </SheetContent>
               </Sheet>
 
-              <Select defaultValue="featured">
+              <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -241,43 +203,56 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                rating={product.rating}
-                category={product.category}
-              />
-            ))}
-          </div>
-
-          <div className="mt-12 flex justify-center">
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon" disabled>
-                &lt;
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="bg-amber-800 text-white hover:bg-amber-900"
-              >
-                1
-              </Button>
-              <Button variant="outline" size="icon">
-                2
-              </Button>
-              <Button variant="outline" size="icon">
-                3
-              </Button>
-              <Button variant="outline" size="icon">
-                &gt;
-              </Button>
+          {products.length === 0 ? (
+            <div className="text-center py-12">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                No products found
+              </h3>
+              <p className="text-gray-600">
+                Try adjusting your filters or search terms.
+              </p>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  id={product._id}
+                  name={product.name}
+                  price={`$${product.price.toFixed(2)}`}
+                  image={product.images[0] || "/placeholder.svg"}
+                  rating={product.rating}
+                  category={product.category}
+                />
+              ))}
+            </div>
+          )}
+
+          {products.length > 0 && (
+            <div className="mt-12 flex justify-center">
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="icon" disabled>
+                  &lt;
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-amber-800 text-white hover:bg-amber-900"
+                >
+                  1
+                </Button>
+                <Button variant="outline" size="icon">
+                  2
+                </Button>
+                <Button variant="outline" size="icon">
+                  3
+                </Button>
+                <Button variant="outline" size="icon">
+                  &gt;
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

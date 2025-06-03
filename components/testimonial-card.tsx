@@ -4,7 +4,6 @@ import { ProductRating } from "@/components/product-rating";
 interface TestimonialCardProps {
   name: string;
   quote: string;
-  image: string;
   rating: number;
 }
 

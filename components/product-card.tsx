@@ -1,7 +1,13 @@
+"use client";
+
+import type React from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ProductRating } from "@/components/product-rating";
+import { useCart } from "@/components/cart-provider";
+import type { Id } from "@/convex/_generated/dataModel";
 
 interface ProductCardProps {
   id: string;
@@ -20,6 +26,18 @@ export function ProductCard({
   rating,
   category,
 }: ProductCardProps) {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    addToCart({
+      productId: id as Id<"products">,
+      quantity: 1,
+    });
+  };
+
   return (
     <div className="group overflow-hidden rounded-lg bg-gradient-to-b from-white to-amber-50 shadow-md transition-all hover:shadow-lg">
       <Link href={`/products/${id}`}>
@@ -48,7 +66,10 @@ export function ProductCard({
           <p className="text-amber-800 font-medium">{price}</p>
           <ProductRating rating={rating} />
         </div>
-        <Button className="mt-4 w-full bg-amber-800 hover:bg-amber-900 cursor-pointer">
+        <Button
+          className="mt-4 w-full bg-amber-800 hover:bg-amber-900 cursor-pointer"
+          onClick={handleAddToCart}
+        >
           Add to Cart
         </Button>
       </div>
