@@ -6,7 +6,6 @@ export const createTestimonial = mutation({
   args: {
     customerName: v.string(),
     customerEmail: v.string(),
-    customerImage: v.optional(v.string()),
     content: v.string(),
     rating: v.number(),
     category: v.string(),
@@ -26,7 +25,6 @@ export const createTestimonial = mutation({
       userId,
       customerName: args.customerName,
       customerEmail: args.customerEmail,
-      customerImage: args.customerImage,
       content: args.content,
       rating: args.rating,
       category: args.category,
@@ -109,7 +107,6 @@ export const updateTestimonial = mutation({
     testimonialId: v.id("testimonials"),
     customerName: v.optional(v.string()),
     customerEmail: v.optional(v.string()),
-    customerImage: v.optional(v.string()),
     content: v.optional(v.string()),
     rating: v.optional(v.number()),
     category: v.optional(v.string()),

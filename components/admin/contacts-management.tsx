@@ -175,7 +175,6 @@ export function ContactsManagement() {
                 <TableRow>
                   <TableHead>Customer</TableHead>
                   <TableHead>Subject</TableHead>
-                  <TableHead>Type</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Actions</TableHead>
@@ -235,6 +234,7 @@ export function ContactsManagement() {
                                   ...contact,
                                 })
                               }
+                              className="cursor-pointer"
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
@@ -307,18 +307,18 @@ export function ContactsManagement() {
                                       )
                                     }
                                   >
-                                    <SelectTrigger>
+                                    <SelectTrigger className="cursor-pointer">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      <SelectItem value="new">New</SelectItem>
-                                      <SelectItem value="in-progress">
+                                      <SelectItem value="new" className="cursor-pointer">New</SelectItem>
+                                      <SelectItem value="in-progress" className="cursor-pointer">
                                         In Progress
                                       </SelectItem>
-                                      <SelectItem value="resolved">
+                                      <SelectItem value="resolved" className="cursor-pointer">
                                         Resolved
                                       </SelectItem>
-                                      <SelectItem value="closed">
+                                      <SelectItem value="closed" className="cursor-pointer">
                                         Closed
                                       </SelectItem>
                                     </SelectContent>
@@ -334,16 +334,16 @@ export function ContactsManagement() {
                             handleStatusUpdate(contact._id, value)
                           }
                         >
-                          <SelectTrigger className="w-32">
+                          <SelectTrigger className="w-32 cursor-pointer">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="new">New</SelectItem>
-                            <SelectItem value="in-progress">
+                            <SelectItem value="new" className="cursor-pointer">New</SelectItem>
+                            <SelectItem value="in-progress" className="cursor-pointer">
                               In Progress
                             </SelectItem>
-                            <SelectItem value="resolved">Resolved</SelectItem>
-                            <SelectItem value="closed">Closed</SelectItem>
+                            <SelectItem value="resolved" className="cursor-pointer">Resolved</SelectItem>
+                            <SelectItem value="closed" className="cursor-pointer">Closed</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

@@ -644,6 +644,7 @@ export function ProductsManagement() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleEdit(product)}
+                          className="cursor-pointer"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -651,6 +652,7 @@ export function ProductsManagement() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleDelete(product._id)}
+                          className="cursor-pointer"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

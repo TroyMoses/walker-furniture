@@ -1,12 +1,60 @@
+"use client";
+
+import type React from "react";
+
+import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { HeroSection } from "@/components/hero-section";
 import { SectionHeading } from "@/components/section-heading";
 import { TestimonialCard } from "@/components/testimonial-card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function TestimonialsPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const submitTestimonial = useMutation(api.testimonials.createTestimonial);
+
+  const handleTestimonialSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      await submitTestimonial({
+        customerName: formData.get("name") as string,
+        customerEmail: formData.get("email") as string,
+        content: formData.get("testimonial") as string,
+        rating: Number.parseInt(formData.get("rating") as string),
+        category: formData.get("product") as string,
+      });
+
+      setIsSubmitted(true);
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      console.error("Failed to submit testimonial:", error);
+      // You might want to show an error message here
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Mock testimonial data
   const testimonials = [
     {
@@ -96,11 +144,21 @@ export default function TestimonialsPage() {
 
           <Tabs defaultValue="all" className="mb-8">
             <TabsList className="mx-auto">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="living-room">Living</TabsTrigger>
-              <TabsTrigger value="bedroom">Bedroom</TabsTrigger>
-              <TabsTrigger value="dining">Dining</TabsTrigger>
-              <TabsTrigger value="office">Office</TabsTrigger>
+              <TabsTrigger value="all" className="cursor-pointer">
+                All
+              </TabsTrigger>
+              <TabsTrigger value="living-room" className="cursor-pointer">
+                Living
+              </TabsTrigger>
+              <TabsTrigger value="bedroom" className="cursor-pointer">
+                Bedroom
+              </TabsTrigger>
+              <TabsTrigger value="dining" className="cursor-pointer">
+                Dining
+              </TabsTrigger>
+              <TabsTrigger value="office" className="cursor-pointer">
+                Office
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="mt-6">
@@ -172,7 +230,6 @@ export default function TestimonialsPage() {
                   .map((testimonial, index) => (
                     <TestimonialCard
                       key={index}
-                      name={testimonial.name}
                       quote={testimonial.quote}
                       image={testimonial.image}
                       rating={testimonial.rating}
@@ -180,13 +237,12 @@ export default function TestimonialsPage() {
                   ))}
               </div>
             </TabsContent>
-
           </Tabs>
         </div>
       </section>
 
       {/* Featured Video Testimonials */}
-      <section className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-amber-50/30 to-white">
+      {/* <section className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-amber-50/30 to-white">
         <div className="container">
           <SectionHeading
             title="Video Testimonials"
@@ -201,9 +257,9 @@ export default function TestimonialsPage() {
               <div className="bg-gradient-to-b from-white to-amber-50 p-4">
                 <h3 className="text-lg font-semibold">The Johnson Family</h3>
                 <p className="text-sm text-gray-700">
-                  {"'"}Watch how Exit Walker Furniture transformed our living space
-                  with custom-designed pieces that perfectly match our style and
-                  needs.{"'"}
+                  {"'"}Watch how Exit Walker Furniture transformed our living
+                  space with custom-designed pieces that perfectly match our
+                  style and needs.{"'"}
                 </p>
               </div>
             </div>
@@ -224,7 +280,7 @@ export default function TestimonialsPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Share Your Story */}
       <section
@@ -238,90 +294,122 @@ export default function TestimonialsPage() {
           />
 
           <div className="mx-auto max-w-2xl rounded-lg bg-gradient-to-b from-white to-amber-50 p-8 shadow-md">
-            <form className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="block text-sm font-medium">
-                    Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="email" className="block text-sm font-medium">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
-                  />
+            {isSubmitted ? (
+              <div className="text-center">
+                <div className="rounded-lg bg-green-50 border border-green-200 p-6">
+                  <h3 className="text-lg font-semibold text-green-800 mb-2">
+                    Thank you for sharing your story!
+                  </h3>
+                  <p className="text-green-700 mb-4">
+                    Your testimonial has been submitted and is pending review.
+                    We appreciate your feedback!
+                  </p>
+                  <Button
+                    onClick={() => setIsSubmitted(false)}
+                    variant="outline"
+                    className="cursor-pointer"
+                  >
+                    Submit Another Testimonial
+                  </Button>
                 </div>
               </div>
+            ) : (
+              <form onSubmit={handleTestimonialSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      type="text"
+                      className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div className="space-y-2">
-                <label htmlFor="product" className="block text-sm font-medium">
-                  Product Purchased
-                </label>
-                <input
-                  id="product"
-                  type="text"
-                  className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="product">Product Category *</Label>
+                  <Select name="product" required>
+                    <SelectTrigger className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800 cursor-pointer">
+                      <SelectValue placeholder="Select product category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem
+                        value="Living Room"
+                        className="cursor-pointer"
+                      >
+                        Living Room
+                      </SelectItem>
+                      <SelectItem value="Bedroom" className="cursor-pointer">
+                        Bedroom
+                      </SelectItem>
+                      <SelectItem
+                        value="Dining Room"
+                        className="cursor-pointer"
+                      >
+                        Dining Room
+                      </SelectItem>
+                      <SelectItem value="Office" className="cursor-pointer">
+                        Office
+                      </SelectItem>
+                      <SelectItem value="Outdoor" className="cursor-pointer">
+                        Outdoor
+                      </SelectItem>
+                      <SelectItem value="General" className="cursor-pointer">
+                        General Experience
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <label htmlFor="rating" className="block text-sm font-medium">
-                  Your Rating
-                </label>
-                <select
-                  id="rating"
-                  className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
+                <div className="space-y-2">
+                  <Label htmlFor="rating">Your Rating *</Label>
+                  <Select name="rating" required>
+                    <SelectTrigger className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800 cursor-pointer">
+                      <SelectValue placeholder="Select your rating" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5" className="cursor-pointer">5 Stars - Excellent</SelectItem>
+                      <SelectItem value="4" className="cursor-pointer">4 Stars - Very Good</SelectItem>
+                      <SelectItem value="3" className="cursor-pointer">3 Stars - Good</SelectItem>
+                      <SelectItem value="2" className="cursor-pointer">2 Stars - Fair</SelectItem>
+                      <SelectItem value="1" className="cursor-pointer">1 Star - Poor</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="testimonial">Your Testimonial *</Label>
+                  <Textarea
+                    id="testimonial"
+                    name="testimonial"
+                    rows={4}
+                    className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
+                    placeholder="Tell us about your experience with our furniture..."
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-amber-800 hover:bg-amber-900 cursor-pointer"
+                  disabled={isSubmitting}
                 >
-                  <option value="5">5 Stars - Excellent</option>
-                  <option value="4">4 Stars - Very Good</option>
-                  <option value="3">3 Stars - Good</option>
-                  <option value="2">2 Stars - Fair</option>
-                  <option value="1">1 Star - Poor</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="testimonial"
-                  className="block text-sm font-medium"
-                >
-                  Your Testimonial
-                </label>
-                <textarea
-                  id="testimonial"
-                  rows={4}
-                  className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
-                  placeholder="Tell us about your experience with our furniture..."
-                ></textarea>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="photo" className="block text-sm font-medium">
-                  Upload a Photo (Optional)
-                </label>
-                <input
-                  id="photo"
-                  type="file"
-                  className="w-full rounded-md border border-gray-300 p-2 focus:border-amber-800 focus:outline-none focus:ring-1 focus:ring-amber-800"
-                />
-                <p className="text-xs text-gray-500">
-                  Share a photo of your Walker Furniture in your home.
-                </p>
-              </div>
-
-              <Button className="w-full bg-amber-800 hover:bg-amber-900">
-                Submit Your Testimonial
-              </Button>
-            </form>
+                  {isSubmitting ? "Submitting..." : "Submit Your Testimonial"}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </section>

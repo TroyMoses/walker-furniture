@@ -79,7 +79,7 @@ export function ImageUpload({
               const storageId = response.storageId;
               // Convert storage ID to URL format that Convex expects
               resolve(
-                `https://your-convex-site.convex.cloud/api/storage/${storageId}`
+                `https://abundant-akita-464.convex.cloud/api/storage/${storageId}`
               );
             } else {
               reject(new Error(`Upload failed: ${xhr.statusText}`));
