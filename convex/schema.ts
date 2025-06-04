@@ -98,7 +98,6 @@ export default defineSchema({
     userId: v.optional(v.id("users")),
     customerName: v.string(),
     customerEmail: v.string(),
-    customerImage: v.optional(v.string()),
     content: v.string(),
     rating: v.number(),
     category: v.string(),
@@ -120,6 +119,17 @@ export default defineSchema({
     status: v.string(), // "new", "read", "responded", "closed"
     createdAt: v.number(),
   })
+    .index("by_status", ["status"])
+    .index("by_created_at", ["createdAt"]),
+
+    newsletter: defineTable({
+    email: v.string(),
+    name: v.optional(v.string()),
+    status: v.string(), // "active", "unsubscribed"
+    source: v.optional(v.string()), // "footer", "popup", "page"
+    createdAt: v.number(),
+  })
+    .index("by_email", ["email"])
     .index("by_status", ["status"])
     .index("by_created_at", ["createdAt"]),
 });

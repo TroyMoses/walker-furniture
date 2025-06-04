@@ -1,9 +1,40 @@
+"use client";
+
+import type React from "react";
+
+import { useState } from "react";
+import { useMutation } from "convex/react";
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
 
 export function Footer() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
+  const subscribeToNewsletterMutation = useMutation(api.newsletter.subscribeToNewsletter);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setMessage("");
+
+    try {
+      const result = await subscribeToNewsletterMutation({
+        email,
+        source: "footer",
+      });
+      setMessage(result.message);
+      setEmail("");
+    } catch (error) {
+      setMessage((error as Error)?.message || "Failed to subscribe. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       {/* Newsletter */}
@@ -18,18 +49,33 @@ export function Footer() {
                 Stay updated with our latest collections and exclusive offers.
               </p>
             </div>
-            <div className="flex w-full max-w-md gap-2">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="w-full rounded-md border-0 bg-white/10 p-2 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-              />
-              <Button
-                variant="outline"
-                className="border-white cursor-pointer text-gray-800 hover:bg-white/10"
-              >
-                Subscribe
-              </Button>
+            <div className="w-full max-w-md">
+              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 rounded-md border-0 bg-white/10 p-2 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  required
+                  disabled={isSubmitting}
+                />
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="border-white cursor-pointer text-gray-800 hover:bg-white/10"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "..." : "Subscribe"}
+                </Button>
+              </form>
+              {message && (
+                <p
+                  className={`mt-2 text-sm ${message.includes("success") || message.includes("Welcome") ? "text-green-200" : "text-red-200"}`}
+                >
+                  {message}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -49,30 +95,29 @@ export function Footer() {
                 Crafting quality furniture for generations.
               </p>
               <div>
-                <p className="mb-2">Industrial Area, Kampala.</p>
+                <p className="mb-2">Opposite Club Guvnors, 1st Street Industrial Area.</p>
                 <p>
-                  <a href="tel:+256757601694" className="mb-4">
+                  <a href="tel:+256757601694 " className="mb-4">
                     +256 757 601694
                   </a>
                 </p>
                 <p>
-                  <a href="mailto:exitwalkerfurniture@gmail.com">
-                    exitwalkerfurniture@gmail.com
+                  <a href="tel:+256780884633 " className="mb-4">
+                    +256 780 884633
+                  </a>
+                </p>
+                <p>
+                  <a href="mailto:kingabbey80@gmail.com">
+                    kingabbey80@gmail.com
                   </a>
                 </p>
               </div>
               <div className="flex gap-4 mt-4">
-                <Link href="#" className="hover:text-amber-800">
-                  <Facebook className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="hover:text-amber-800">
+                <Link href="https://wwww.instagram.com/exit_walker_furniture_concepts" className="hover:text-amber-800">
                   <Instagram className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="hover:text-amber-800">
+                <Link href="https://wwww.twitter.com/Abelexit" className="hover:text-amber-800">
                   <Twitter className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="hover:text-amber-800">
-                  <Linkedin className="h-5 w-5" />
                 </Link>
               </div>
             </div>

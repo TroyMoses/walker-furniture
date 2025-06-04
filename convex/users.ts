@@ -3,6 +3,7 @@ import {
   type MutationCtx,
   type QueryCtx,
   internalMutation,
+  internalQuery,
   query,
 } from "./_generated/server";
 
@@ -103,6 +104,24 @@ export const getMe = query({
   },
 });
 
+export const internalGetMe = internalQuery({
+  args: {},
+  async handler(ctx) {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      return null;
+    }
+
+    const user = await getUser(ctx, identity.tokenIdentifier);
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  },
+});
 // New functions for user management
 
 export const getAllUsers = query({

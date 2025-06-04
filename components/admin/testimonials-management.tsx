@@ -58,7 +58,6 @@ import Image from "next/image";
 interface TestimonialForm {
   customerName: string;
   customerEmail: string;
-  customerImage: string;
   content: string;
   rating: number;
   category: string;
@@ -77,7 +76,6 @@ export function TestimonialsManagement() {
     _id: Id<"testimonials">;
     customerName: string;
     customerEmail: string;
-    customerImage?: string;
     content: string;
     rating: number;
     category: string;
@@ -91,7 +89,6 @@ export function TestimonialsManagement() {
   const [testimonialForm, setTestimonialForm] = useState<TestimonialForm>({
     customerName: "",
     customerEmail: "",
-    customerImage: "",
     content: "",
     rating: 5,
     category: "",
@@ -157,7 +154,6 @@ export function TestimonialsManagement() {
     setTestimonialForm({
       customerName: "",
       customerEmail: "",
-      customerImage: "",
       content: "",
       rating: 5,
       category: "",
@@ -193,7 +189,6 @@ export function TestimonialsManagement() {
     setTestimonialForm({
       customerName: testimonial.customerName,
       customerEmail: testimonial.customerEmail,
-      customerImage: testimonial.customerImage || "",
       content: testimonial.content,
       rating: testimonial.rating,
       category: testimonial.category,
@@ -264,21 +259,6 @@ export function TestimonialsManagement() {
             required
           />
         </div>
-      </div>
-
-      <div>
-        <Label htmlFor="customerImage">Customer Image URL</Label>
-        <Input
-          id="customerImage"
-          value={testimonialForm.customerImage}
-          onChange={(e) =>
-            setTestimonialForm({
-              ...testimonialForm,
-              customerImage: e.target.value,
-            })
-          }
-          placeholder="https://example.com/avatar.jpg"
-        />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -466,9 +446,10 @@ export function TestimonialsManagement() {
                       <div className="flex items-center space-x-3">
                         <Image
                           src={
-                            testimonial.customerImage ||
-                            "/placeholder.svg?height=40&width=40"
+                            "/placeholder.png"
                           }
+                          width={38}
+                          height={38}
                           alt={testimonial.customerName}
                           className="h-10 w-10 rounded-full object-cover"
                         />
@@ -530,6 +511,7 @@ export function TestimonialsManagement() {
                               onClick={() =>
                                 setSelectedTestimonial(testimonial)
                               }
+                              className="cursor-pointer"
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
@@ -552,9 +534,10 @@ export function TestimonialsManagement() {
                                     <div className="flex items-center space-x-3 mt-2">
                                       <Image
                                         src={
-                                          selectedTestimonial.customerImage ||
-                                          "/placeholder.svg?height=60&width=60"
+                                          "/placeholder.png"
                                         }
+                                        width={38}
+                                        height={38}
                                         alt={selectedTestimonial.customerName}
                                         className="h-15 w-15 rounded-full object-cover"
                                       />
@@ -613,17 +596,17 @@ export function TestimonialsManagement() {
                                         )
                                       }
                                     >
-                                      <SelectTrigger className="w-40">
+                                      <SelectTrigger className="w-40 cursor-pointer">
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="pending">
+                                        <SelectItem value="pending" className="cursor-pointer">
                                           Pending
                                         </SelectItem>
-                                        <SelectItem value="approved">
+                                        <SelectItem value="approved" className="cursor-pointer">
                                           Approved
                                         </SelectItem>
-                                        <SelectItem value="rejected">
+                                        <SelectItem value="rejected" className="cursor-pointer">
                                           Rejected
                                         </SelectItem>
                                       </SelectContent>
@@ -633,6 +616,7 @@ export function TestimonialsManagement() {
                                       onClick={() =>
                                         handleEdit(selectedTestimonial)
                                       }
+                                      className="cursor-pointer"
                                     >
                                       <Edit className="h-4 w-4 mr-2" />
                                       Edit
@@ -642,6 +626,7 @@ export function TestimonialsManagement() {
                                       onClick={() =>
                                         handleDelete(selectedTestimonial._id)
                                       }
+                                      className="cursor-pointer"
                                     >
                                       <Trash2 className="h-4 w-4 mr-2" />
                                       Delete
@@ -656,6 +641,7 @@ export function TestimonialsManagement() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleEdit(testimonial)}
+                          className="cursor-pointer"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -665,13 +651,13 @@ export function TestimonialsManagement() {
                             handleStatusUpdate(testimonial._id, value)
                           }
                         >
-                          <SelectTrigger className="w-32">
+                          <SelectTrigger className="w-32 cursor-pointer">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="approved">Approved</SelectItem>
-                            <SelectItem value="rejected">Rejected</SelectItem>
+                            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
+                            <SelectItem value="approved" className="cursor-pointer">Approved</SelectItem>
+                            <SelectItem value="rejected" className="cursor-pointer">Rejected</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

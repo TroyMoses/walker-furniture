@@ -1,196 +1,141 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart, User, Settings } from "lucide-react";
-import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
-
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { useMobile } from "@/hooks/use-mobile";
-import { api } from "@/convex/_generated/api";
 import Image from "next/image";
+import { Menu, X, ShoppingCart, User, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/components/cart-provider";
+import { useAuth, UserButton } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export function Header() {
-  const isMobile = useMobile();
-  const { isSignedIn } = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { totalItems } = useCart();
+  const { isSignedIn } = useAuth();
   const currentUser = useQuery(api.users.getMe);
-
   const isAdmin = currentUser?.role === "admin";
 
+  const navigation = [
+    { name: "Home", href: "/" },
+    { name: "Products", href: "/products" },
+    { name: "About", href: "/about" },
+    { name: "Testimonials", href: "/testimonials" },
+    { name: "Contact", href: "/contact" },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-amber-50 to-white">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
-        <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-amber-100">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center space-x-2">
             <Image
-              width={32}
-              height={32}
               src="/logo.png"
-              alt="Exit Walker Furniture Logo"
-              className="h-8 w-8 md:h-10 md:w-10"
+              alt="Exit Walker Furniture"
+              width={40}
+              height={40}
+              className="h-10 w-10"
             />
-          </Link>
-          <Link href="/" className="hidden md:flex items-center gap-2">
-            <span className="text-lg md:text-3xl font-bold text-amber-800">
-              Exit Walker Furniture
-            </span>
-          </Link>
-          <Link href="/" className="flex flex-col md:hidden">
-            <span className="text-lg md:text-3xl font-bold text-amber-800">
+            <span className="text-xl font-bold text-amber-800">
               Exit Walker
             </span>
-            <span className="text-lg md:text-3xl font-bold text-amber-800">
-              Furniture
-            </span>
           </Link>
-        </div>
 
-        {isMobile ? (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="cursor-pointer">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-amber-50 w-[250px]">
-              <SheetTitle>
-                <div className="flex items-center justify-between">
-                  <Link
-                    href="/"
-                    className="px-4 mt-2 text-2xl font-bold text-amber-800"
-                  >
-                    Exit Walker Furniture
-                  </Link>
-                </div>
-              </SheetTitle>
-              <nav className="flex flex-col gap-4 mt-3 px-4">
-                <Link
-                  href="/"
-                  className="text-xl font-medium hover:text-amber-800"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/products"
-                  className="text-xl font-medium hover:text-amber-800"
-                >
-                  Products
-                </Link>
-                <Link
-                  href="/about"
-                  className="text-xl font-medium hover:text-amber-800"
-                >
-                  About
-                </Link>
-                <Link
-                  href="/testimonials"
-                  className="text-xl font-medium hover:text-amber-800"
-                >
-                  Testimonials
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-xl font-medium hover:text-amber-800"
-                >
-                  Contact
-                </Link>
-              </nav>
-              <SheetFooter>
-                <div className="flex flex-col gap-4 mt-8">
-                  <SignInButton mode="modal">
-                    <Button variant="outline" className="gap-2 cursor-pointer">
-                      <User className="h-4 w-4" />
-                      <span className="hidden md:inline">Sign In</span>
-                    </Button>
-                  </SignInButton>
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="text-sm font-medium hover:text-amber-800"
-                    >
-                      Admin
-                    </Link>
-                  )}
-                </div>
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
-        ) : (
-          <nav className="flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium hover:text-amber-800">
-              Home
-            </Link>
-            <Link
-              href="/products"
-              className="text-sm font-medium hover:text-amber-800"
-            >
-              Products
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium hover:text-amber-800"
-            >
-              About
-            </Link>
-            <Link
-              href="/testimonials"
-              className="text-sm font-medium hover:text-amber-800"
-            >
-              Testimonials
-            </Link>
-            <Link
-              href="/contact"
-              className="text-sm font-medium hover:text-amber-800"
-            >
-              Contact
-            </Link>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 hover:text-amber-800 transition-colors font-medium"
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
-        )}
 
-        <div className="flex items-center gap-4">
-          {isSignedIn ? (
-            <>
-              {!isAdmin && (
-                <Button variant="outline" className="gap-2" asChild>
-                  <Link href="/cart">
-                    <ShoppingCart className="h-4 w-4" />
-                    <span className="hidden md:inline">Cart</span>
-                  </Link>
+          {/* Right side actions */}
+          <div className="flex items-center space-x-4">
+            {/* Admin Dashboard - Only visible to admins */}
+            {isSignedIn && isAdmin && (
+              <Link href="/admin">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="border-amber-800 text-amber-800 hover:bg-amber-50 cursor-pointer"
+                >
+                  <Settings className="h-5 w-5" />
                 </Button>
-              )}
-              {isAdmin && (
-                <Button variant="outline" className="gap-2" asChild>
-                  <Link href="/admin">
-                    <Settings className="h-4 w-4" />
-                    <span className="hidden md:inline">Admin</span>
-                  </Link>
-                </Button>
-              )}
-              <UserButton afterSignOutUrl="/" />
-            </>
-          ) : (
-            <>
-              <SignInButton mode="modal">
-                <Button variant="outline" className="gap-2 cursor-pointer">
-                  <User className="h-4 w-4" />
-                  <span className="hidden md:inline">Sign In</span>
-                </Button>
-              </SignInButton>
-              <Button className="bg-amber-800 hover:bg-amber-900" asChild>
-                <Link href="/products">Order Now</Link>
+              </Link>
+            )}
+
+            {/* Cart */}
+            <Link href="/cart" className="relative">
+              <Button variant="ghost" size="icon" className="relative cursor-pointer">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-amber-800 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
               </Button>
-            </>
-          )}
+            </Link>
+
+            {/* User Authentication */}
+            {isSignedIn ? (
+              <UserButton afterSignOutUrl="/" />
+            ) : (
+              <Link href="/sign-in">
+                <Button variant="ghost" size="icon" className="cursor-pointer">
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
+
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-amber-100">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 text-gray-700 hover:text-amber-800 transition-colors font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {isSignedIn && isAdmin && (
+                <Link
+                  href="/admin"
+                  className="block px-3 py-2 text-amber-800 hover:text-amber-900 transition-colors font-semibold border-t border-amber-100 mt-2 pt-3 cursor-pointer"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  🛠️ Admin Dashboard
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
