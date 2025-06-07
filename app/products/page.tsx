@@ -9,7 +9,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { HeroSection } from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -17,19 +17,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 export default function ProductsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
   const [sortBy, setSortBy] = useState("featured");
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
-  // Search products with all filters
+  // Debounce search input
+  useEffect(() => {
+    setIsSearching(true);
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchInput);
+      setIsSearching(false);
+    }, 1300);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Search products with debounced search term
   const products = useQuery(api.products.searchProducts, {
-    searchTerm: searchTerm || undefined,
+    searchTerm: debouncedSearchTerm || undefined,
     category: categoryFilter !== "all" ? categoryFilter : undefined,
     minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
     maxPrice: priceRange[1] < 5000 ? priceRange[1] : undefined,
@@ -54,7 +67,8 @@ export default function ProductsPage() {
     setPriceRange([0, 5000]);
     setMinRating(undefined);
     setInStockOnly(false);
-    setSearchTerm("");
+    setSearchInput("");
+    setDebouncedSearchTerm("");
     setSortBy("featured");
   };
 
@@ -92,12 +106,15 @@ export default function ProductsPage() {
             <div className="flex items-center gap-4">
               <div className="relative flex-1 sm:w-64">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                {isSearching && (
+                  <Loader2 className="absolute right-2.5 top-2.5 h-4 w-4 text-gray-500 animate-spin" />
+                )}
                 <Input
                   type="search"
                   placeholder="Search products..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8 pr-8"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
               </div>
 
@@ -123,11 +140,11 @@ export default function ProductsPage() {
               {products.length === 0
                 ? "No products found"
                 : `Showing ${products.length} product${products.length !== 1 ? "s" : ""}`}
-              {searchTerm && ` for "${searchTerm}"`}
+              {debouncedSearchTerm && ` for "${debouncedSearchTerm}"`}
               {categoryFilter !== "all" && ` in ${categoryFilter}`}
             </p>
 
-            {(searchTerm || activeFiltersCount > 0) && (
+            {(debouncedSearchTerm || activeFiltersCount > 0) && (
               <Button
                 variant="ghost"
                 size="sm"
