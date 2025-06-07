@@ -38,16 +38,23 @@ export function ProductCard({
     });
   };
 
+  // Ensure we have a valid image URL
+  const imageUrl = image && image !== "" ? image : "/placeholder.png";
+
   return (
     <div className="group overflow-hidden rounded-lg bg-gradient-to-b from-white to-amber-50 shadow-md transition-all hover:shadow-lg">
       <Link href={`/products/${id}`}>
         <div className="relative h-64 overflow-hidden">
           <Image
-            src={image || "/placeholder.svg"}
+            src={imageUrl || "/placeholder.png"}
             alt={name}
             width={300}
             height={300}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/placeholder.png";
+            }}
           />
           {category && (
             <div className="absolute top-2 left-2 bg-amber-800 px-2 py-1 text-xs text-white rounded-md">

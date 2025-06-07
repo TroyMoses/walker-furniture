@@ -11,14 +11,12 @@ export const getAllProducts = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -33,6 +31,18 @@ export const getAllProducts = query({
   },
 });
 
+// Add a new query to get product with storage IDs for editing
+export const getProductForEdit = query({
+  args: { productId: v.id("products") },
+  handler: async (ctx, args) => {
+    const product = await ctx.db.get(args.productId);
+    if (!product) return null;
+
+    // Return product with original storage IDs (not converted to URLs)
+    return product;
+  },
+});
+
 export const getProductById = query({
   args: { productId: v.id("products") },
   handler: async (ctx, args) => {
@@ -41,14 +51,12 @@ export const getProductById = query({
 
     // Convert image storage IDs to URLs
     const imageUrls = await Promise.all(
-      product.images.map(async (imageId) => {
-        if (typeof imageId === "string" && imageId.startsWith("http")) {
-          return imageId; // Already a URL
-        }
+      (product.images || []).map(async (imageId) => {
         try {
-          return await ctx.storage.getUrl(imageId as Id<"_storage">);
+          const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+          return url || "/placeholder.png";
         } catch {
-          return "/placeholder.png"; // Fallback for invalid IDs
+          return "/placeholder.png";
         }
       })
     );
@@ -80,14 +88,12 @@ export const getProductsByCategory = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -154,14 +160,12 @@ export const searchProducts = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -188,14 +192,12 @@ export const getFeaturedProducts = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -228,7 +230,7 @@ export const createProduct = mutation({
     longDescription: v.string(),
     price: v.number(),
     category: v.string(),
-    images: v.array(v.string()),
+    images: v.array(v.id("_storage")),
     colors: v.array(v.string()),
     specifications: v.array(
       v.object({
@@ -266,7 +268,7 @@ export const updateProduct = mutation({
     longDescription: v.optional(v.string()),
     price: v.optional(v.number()),
     category: v.optional(v.string()),
-    images: v.optional(v.array(v.string())),
+    images: v.optional(v.array(v.id("_storage"))),
     colors: v.optional(v.array(v.string())),
     specifications: v.optional(
       v.array(

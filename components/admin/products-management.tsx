@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
@@ -429,6 +429,10 @@ export function ProductsManagement() {
   });
 
   const products = useQuery(api.products.getAllProducts, {});
+  const productForEdit = useQuery(
+    api.products.getProductForEdit,
+    editingProduct ? { productId: editingProduct } : "skip"
+  );
   const createProduct = useMutation(api.products.createProduct);
   const updateProduct = useMutation(api.products.updateProduct);
   const deleteProduct = useMutation(api.products.deleteProduct);
@@ -485,14 +489,14 @@ export function ProductsManagement() {
         await updateProduct({
           productId: editingProduct,
           ...productForm,
-          images: productForm.images, // Remove the cast to Id<"_storage">[]
+          images: productForm.images as Id<"_storage">[],
         });
         setIsEditDialogOpen(false);
         setEditingProduct(null);
       } else {
         await createProduct({
           ...productForm,
-          images: productForm.images, // Remove the cast to Id<"_storage">[]
+          images: productForm.images as Id<"_storage">[],
         });
         setIsAddDialogOpen(false);
       }
@@ -507,25 +511,31 @@ export function ProductsManagement() {
 
   const handleEdit = (product: ProductType) => {
     setEditingProduct(product._id);
-    setProductForm({
-      name: product.name,
-      description: product.description,
-      longDescription: product.longDescription || "",
-      price: product.price,
-      category: product.category,
-      rating: product.rating || 4.5,
-      reviewCount: product.reviewCount || 0,
-      colors: product.colors || [],
-      images: product.images || [],
-      specifications: product.specifications || [],
-      features: product.features || [],
-      care: product.care || [],
-      inStock: product.inStock,
-      isNew: product.isNew || false,
-      isBestseller: product.isBestseller || false,
-    });
     setIsEditDialogOpen(true);
   };
+
+  // Update form when productForEdit data is loaded
+  React.useEffect(() => {
+    if (productForEdit && editingProduct) {
+      setProductForm({
+        name: productForEdit.name,
+        description: productForEdit.description,
+        longDescription: productForEdit.longDescription || "",
+        price: productForEdit.price,
+        category: productForEdit.category,
+        rating: productForEdit.rating || 4.5,
+        reviewCount: productForEdit.reviewCount || 0,
+        colors: productForEdit.colors || [],
+        images: productForEdit.images || [], // These are storage IDs from the database
+        specifications: productForEdit.specifications || [],
+        features: productForEdit.features || [],
+        care: productForEdit.care || [],
+        inStock: productForEdit.inStock,
+        isNew: productForEdit.isNew || false,
+        isBestseller: productForEdit.isBestseller || false,
+      });
+    }
+  }, [productForEdit, editingProduct]);
 
   const handleDelete = async (productId: Id<"products">) => {
     if (
@@ -635,12 +645,16 @@ export function ProductsManagement() {
                           width={40}
                           height={40}
                           src={
-                            product.images?.[0] ||
-                            "/placeholder.png" ||
-                            "/placeholder.svg"
+                            product.images?.[0] && product.images[0] !== ""
+                              ? product.images[0]
+                              : "/placeholder.png"
                           }
                           alt={product.name}
                           className="h-10 w-10 rounded object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "/placeholder.png";
+                          }}
                         />
                         <div>
                           <div className="font-medium">{product.name}</div>

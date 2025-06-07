@@ -38,6 +38,7 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("featured");
 
   const products = useQuery(api.products.getAllProducts, {});
+  console.log("Product Images:", products?.map(p => p.images));
 
   console.log("Products fetched:", products);
 

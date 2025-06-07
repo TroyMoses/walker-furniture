@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ["abundant-akita-464.convex.cloud"],
+    remotePatterns: [
+      {
+        hostname: "abundant-akita-464.convex.cloud",
+      },
+    ],
   },
 };
 
