@@ -110,21 +110,28 @@ export const getProductsByCategory = query({
 
 export const searchProducts = query({
   args: {
-    searchTerm: v.string(),
+    searchTerm: v.optional(v.string()),
     category: v.optional(v.string()),
+    minPrice: v.optional(v.number()),
+    maxPrice: v.optional(v.number()),
+    minRating: v.optional(v.number()),
     sortBy: v.optional(v.string()),
+    inStock: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     let products = await ctx.db.query("products").collect();
 
     // Filter by search term
-    if (args.searchTerm) {
+    if (args.searchTerm && args.searchTerm.trim()) {
       const searchLower = args.searchTerm.toLowerCase();
       products = products.filter(
         (product) =>
           product.name.toLowerCase().includes(searchLower) ||
           product.description.toLowerCase().includes(searchLower) ||
-          product.category.toLowerCase().includes(searchLower)
+          product.category.toLowerCase().includes(searchLower) ||
+          (product.features || []).some((feature) =>
+            feature.toLowerCase().includes(searchLower)
+          )
       );
     }
 
@@ -133,6 +140,26 @@ export const searchProducts = query({
       products = products.filter(
         (product) => product.category === args.category
       );
+    }
+
+    // Filter by price range
+    if (args.minPrice !== undefined) {
+      products = products.filter((product) => product.price >= args.minPrice!);
+    }
+    if (args.maxPrice !== undefined) {
+      products = products.filter((product) => product.price <= args.maxPrice!);
+    }
+
+    // Filter by minimum rating
+    if (args.minRating !== undefined) {
+      products = products.filter(
+        (product) => (product.rating || 0) >= args.minRating!
+      );
+    }
+
+    // Filter by stock status
+    if (args.inStock !== undefined) {
+      products = products.filter((product) => product.inStock === args.inStock);
     }
 
     // Sort products
@@ -145,14 +172,21 @@ export const searchProducts = query({
           products.sort((a, b) => b.price - a.price);
           break;
         case "rating":
-          products.sort((a, b) => b.rating - a.rating);
+          products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
           break;
         case "newest":
           products.sort((a, b) => b._creationTime - a._creationTime);
           break;
-        default:
-          // Default sort by name
+        case "name":
           products.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        default:
+          // Default sort by featured/bestsellers first, then by name
+          products.sort((a, b) => {
+            if (a.isBestseller && !b.isBestseller) return -1;
+            if (!a.isBestseller && b.isBestseller) return 1;
+            return a.name.localeCompare(b.name);
+          });
       }
     }
 

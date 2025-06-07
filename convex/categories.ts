@@ -1,33 +1,37 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 
 export const getAllCategories = query({
   args: {},
   handler: async (ctx) => {
-    const categories = await ctx.db
-      .query("categories")
-      .withIndex("by_display_order")
-      .collect();
+    const categories = await ctx.db.query("categories").order("asc").collect();
 
-    // Convert image storage IDs to URLs
+    // Convert image storage IDs to URLs and sort by display order
     const categoriesWithImageUrls = await Promise.all(
       categories.map(async (category) => {
-        try {
-          const imageUrl = await ctx.storage.getUrl(category.image);
-          return {
-            ...category,
-            image: imageUrl || "/placeholder.png",
-          };
-        } catch {
-          return {
-            ...category,
-            image: "/placeholder.png",
-          };
+        let imageUrl = "/placeholder.svg";
+        if (category.image) {
+          try {
+            const url = await ctx.storage.getUrl(
+              category.image as Id<"_storage">
+            );
+            imageUrl = url || "/placeholder.svg";
+          } catch {
+            imageUrl = "/placeholder.svg";
+          }
         }
+        return {
+          ...category,
+          image: imageUrl,
+        };
       })
     );
 
-    return categoriesWithImageUrls;
+    // Sort by display order
+    return categoriesWithImageUrls.sort(
+      (a, b) => a.displayOrder - b.displayOrder
+    );
   },
 });
 
@@ -36,31 +40,35 @@ export const getActiveCategories = query({
   handler: async (ctx) => {
     const categories = await ctx.db
       .query("categories")
-      .withIndex("by_active", (q) => q.eq("isActive", true))
+      .filter((q) => q.eq(q.field("isActive"), true))
+      .order("asc")
       .collect();
 
-    // Sort by display order
-    categories.sort((a, b) => a.displayOrder - b.displayOrder);
-
-    // Convert image storage IDs to URLs
+    // Convert image storage IDs to URLs and sort by display order
     const categoriesWithImageUrls = await Promise.all(
       categories.map(async (category) => {
-        try {
-          const imageUrl = await ctx.storage.getUrl(category.image);
-          return {
-            ...category,
-            image: imageUrl || "/placeholder.png",
-          };
-        } catch {
-          return {
-            ...category,
-            image: "/placeholder.png",
-          };
+        let imageUrl = "/placeholder.svg";
+        if (category.image) {
+          try {
+            const url = await ctx.storage.getUrl(
+              category.image as Id<"_storage">
+            );
+            imageUrl = url || "/placeholder.svg";
+          } catch {
+            imageUrl = "/placeholder.svg";
+          }
         }
+        return {
+          ...category,
+          image: imageUrl,
+        };
       })
     );
 
-    return categoriesWithImageUrls;
+    // Sort by display order
+    return categoriesWithImageUrls.sort(
+      (a, b) => a.displayOrder - b.displayOrder
+    );
   },
 });
 
@@ -75,6 +83,35 @@ export const getCategoryForEdit = query({
   },
 });
 
+export const getCategoryBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    const category = await ctx.db
+      .query("categories")
+      .filter((q) => q.eq(q.field("slug"), args.slug))
+      .filter((q) => q.eq(q.field("isActive"), true))
+      .first();
+
+    if (!category) return null;
+
+    // Convert image storage ID to URL
+    let imageUrl = "/placeholder.svg";
+    if (category.image) {
+      try {
+        const url = await ctx.storage.getUrl(category.image as Id<"_storage">);
+        imageUrl = url || "/placeholder.svg";
+      } catch {
+        imageUrl = "/placeholder.svg";
+      }
+    }
+
+    return {
+      ...category,
+      image: imageUrl,
+    };
+  },
+});
+
 export const createCategory = mutation({
   args: {
     name: v.string(),
@@ -85,6 +122,16 @@ export const createCategory = mutation({
     isActive: v.boolean(),
   },
   handler: async (ctx, args) => {
+    // Check if slug already exists
+    const existingCategory = await ctx.db
+      .query("categories")
+      .filter((q) => q.eq(q.field("slug"), args.slug))
+      .first();
+
+    if (existingCategory) {
+      throw new Error("A category with this slug already exists");
+    }
+
     const now = Date.now();
     return await ctx.db.insert("categories", {
       ...args,
@@ -106,10 +153,23 @@ export const updateCategory = mutation({
   },
   handler: async (ctx, args) => {
     const { categoryId, ...updates } = args;
-    const now = Date.now();
+
+    // If updating slug, check if it already exists (excluding current category)
+    if (updates.slug) {
+      const existingCategory = await ctx.db
+        .query("categories")
+        .filter((q) => q.eq(q.field("slug"), updates.slug))
+        .filter((q) => q.neq(q.field("_id"), categoryId))
+        .first();
+
+      if (existingCategory) {
+        throw new Error("A category with this slug already exists");
+      }
+    }
+
     return await ctx.db.patch(categoryId, {
       ...updates,
-      updatedAt: now,
+      updatedAt: Date.now(),
     });
   },
 });
@@ -117,43 +177,24 @@ export const updateCategory = mutation({
 export const deleteCategory = mutation({
   args: { categoryId: v.id("categories") },
   handler: async (ctx, args) => {
-    // Check if any products use this category
-    const productsWithCategory = await ctx.db
-      .query("products")
-      .filter((q) => q.eq(q.field("category"), args.categoryId))
-      .first();
+    // Check if any products are using this category
+    const productsWithCategory = await ctx.db.query("products").collect();
 
-    if (productsWithCategory) {
+    const category = await ctx.db.get(args.categoryId);
+    if (!category) {
+      throw new Error("Category not found");
+    }
+
+    const hasProducts = productsWithCategory.some(
+      (product) => product.category === category.name
+    );
+
+    if (hasProducts) {
       throw new Error(
         "Cannot delete category that has products assigned to it"
       );
     }
 
     return await ctx.db.delete(args.categoryId);
-  },
-});
-
-export const getCategoryBySlug = query({
-  args: { slug: v.string() },
-  handler: async (ctx, args) => {
-    const category = await ctx.db
-      .query("categories")
-      .withIndex("by_slug", (q) => q.eq("slug", args.slug))
-      .first();
-
-    if (!category) return null;
-
-    try {
-      const imageUrl = await ctx.storage.getUrl(category.image);
-      return {
-        ...category,
-        image: imageUrl || "/placeholder.png",
-      };
-    } catch {
-      return {
-        ...category,
-        image: "/placeholder.png",
-      };
-    }
   },
 });

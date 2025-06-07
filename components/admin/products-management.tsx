@@ -39,11 +39,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search, Star } from "lucide-react";
 import type { Id } from "@/convex/_generated/dataModel";
 import Image from "next/image";
 import { ImageUpload } from "./image-upload";
+import { toast } from "sonner";
 
 interface ProductForm {
   name: string;
@@ -473,7 +485,7 @@ export function ProductsManagement() {
     e.preventDefault();
 
     if (productForm.images.length === 0) {
-      alert("Please upload at least one product image");
+      toast.error("Please upload at least one product image");
       return;
     }
 
@@ -486,17 +498,19 @@ export function ProductsManagement() {
         });
         setIsEditDialogOpen(false);
         setEditingProduct(null);
+        toast.success("Product updated successfully!");
       } else {
         await createProduct({
           ...productForm,
           images: productForm.images as Id<"_storage">[],
         });
         setIsAddDialogOpen(false);
+        toast.success("Product created successfully!");
       }
       resetForm();
     } catch (error) {
       console.error("Failed to save product:", error);
-      alert("Failed to save product. Please try again.");
+      toast.error("Failed to save product. Please try again.");
     }
   };
 
@@ -530,18 +544,16 @@ export function ProductsManagement() {
     }
   }, [productForEdit, editingProduct]);
 
-  const handleDelete = async (productId: Id<"products">) => {
-    if (
-      confirm(
-        "Are you sure you want to delete this product? This action cannot be undone."
-      )
-    ) {
-      try {
-        await deleteProduct({ productId });
-      } catch (error) {
-        console.error("Failed to delete product:", error);
-        alert("Failed to delete product. Please try again.");
-      }
+  const handleDelete = async (
+    productId: Id<"products">,
+    productName: string
+  ) => {
+    try {
+      await deleteProduct({ productId });
+      toast.success(`Product "${productName}" deleted successfully!`);
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      toast.error("Failed to delete product. Please try again.");
     }
   };
 
@@ -696,14 +708,41 @@ export function ProductsManagement() {
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(product._id)}
-                          className="cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="cursor-pointer"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete Product
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete &quot;
+                                {product.name}&quot;? This action cannot be
+                                undone and will remove the product from all
+                                orders and reviews.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleDelete(product._id, product.name)
+                                }
+                                className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>

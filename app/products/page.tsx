@@ -9,18 +9,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { HeroSection } from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Search, SlidersHorizontal } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -28,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,22 +25,38 @@ export default function ProductsPage() {
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
   const [sortBy, setSortBy] = useState("featured");
+  const [inStockOnly, setInStockOnly] = useState(false);
 
-  const products = useQuery(api.products.getAllProducts, {});
-  console.log("Product Images:", products?.map(p => p.images));
+  // Search products with all filters
+  const products = useQuery(api.products.searchProducts, {
+    searchTerm: searchTerm || undefined,
+    category: categoryFilter !== "all" ? categoryFilter : undefined,
+    minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
+    maxPrice: priceRange[1] < 5000 ? priceRange[1] : undefined,
+    minRating: minRating,
+    sortBy: sortBy !== "featured" ? sortBy : undefined,
+    inStock: inStockOnly ? true : undefined,
+  });
 
-  console.log("Products fetched:", products);
+  // Calculate active filters count
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (categoryFilter !== "all") count++;
+    if (priceRange[0] > 0 || priceRange[1] < 5000) count++;
+    if (minRating !== undefined) count++;
+    if (inStockOnly) count++;
+    return count;
+  }, [categoryFilter, priceRange, minRating, inStockOnly]);
 
-  const categories = [
-    "Living Room",
-    "Bedroom",
-    "Dining",
-    "Office",
-    "Outdoor",
-    "Storage",
-    "Lighting",
-    "Decor",
-  ];
+  // Clear all filters
+  const clearAllFilters = () => {
+    setCategoryFilter("all");
+    setPriceRange([0, 5000]);
+    setMinRating(undefined);
+    setInStockOnly(false);
+    setSearchTerm("");
+    setSortBy("featured");
+  };
 
   if (!products) {
     return (
@@ -96,92 +101,6 @@ export default function ProductsPage() {
                 />
               </div>
 
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <SlidersHorizontal className="h-4 w-4" />
-                    <span className="sr-only">Filter</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Filter Products</SheetTitle>
-                    <SheetDescription>
-                      Narrow down your product search with these filters.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="mt-6 px-3 md:px-4 space-y-6">
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-medium">Categories</h3>
-                      {categories.map((category) => (
-                        <div
-                          key={category}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`category-${category}`}
-                            checked={categoryFilter === category}
-                            onCheckedChange={(checked) => {
-                              setCategoryFilter(checked ? category : "all");
-                            }}
-                          />
-                          <Label htmlFor={`category-${category}`}>
-                            {category}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-medium">Price Range</h3>
-                      <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
-                        min={0}
-                        max={5000}
-                        step={100}
-                      />
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">${priceRange[0]}</span>
-                        <span className="text-sm">${priceRange[1]}+</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-medium">Rating</h3>
-                      {[4, 3, 2, 1].map((rating) => (
-                        <div
-                          key={rating}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`rating-${rating}`}
-                            checked={minRating === rating}
-                            onCheckedChange={(checked) => {
-                              setMinRating(checked ? rating : undefined);
-                            }}
-                          />
-                          <Label htmlFor={`rating-${rating}`}>
-                            {rating}+ Stars
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="pt-4">
-                      <Button
-                        className="cursor-pointer w-full bg-amber-800 hover:bg-amber-900"
-                        onClick={() => {
-                          // Filters are applied automatically through state
-                        }}
-                      >
-                        Apply Filters
-                      </Button>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Sort by" />
@@ -192,9 +111,32 @@ export default function ProductsPage() {
                   <SelectItem value="price-high">Price: High to Low</SelectItem>
                   <SelectItem value="rating">Highest Rated</SelectItem>
                   <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="name">Name A-Z</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          {/* Results Summary */}
+          <div className="mb-6 flex items-center justify-between">
+            <p className="text-sm text-gray-600">
+              {products.length === 0
+                ? "No products found"
+                : `Showing ${products.length} product${products.length !== 1 ? "s" : ""}`}
+              {searchTerm && ` for "${searchTerm}"`}
+              {categoryFilter !== "all" && ` in ${categoryFilter}`}
+            </p>
+
+            {(searchTerm || activeFiltersCount > 0) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearAllFilters}
+                className="text-amber-800 hover:text-amber-900"
+              >
+                Clear all filters
+              </Button>
+            )}
           </div>
 
           {products.length === 0 ? (
@@ -202,9 +144,15 @@ export default function ProductsPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 No products found
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-4">
                 Try adjusting your filters or search terms.
               </p>
+              <Button
+                onClick={clearAllFilters}
+                className="bg-amber-800 hover:bg-amber-900"
+              >
+                Clear All Filters
+              </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -222,6 +170,7 @@ export default function ProductsPage() {
             </div>
           )}
 
+          {/* Pagination - You can implement this later */}
           {products.length > 0 && (
             <div className="mt-12 flex justify-center">
               <div className="flex items-center gap-2">
@@ -235,13 +184,7 @@ export default function ProductsPage() {
                 >
                   1
                 </Button>
-                <Button variant="outline" size="icon">
-                  2
-                </Button>
-                <Button variant="outline" size="icon">
-                  3
-                </Button>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" disabled>
                   &gt;
                 </Button>
               </div>

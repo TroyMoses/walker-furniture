@@ -31,11 +31,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search } from "lucide-react";
 import type { Id } from "@/convex/_generated/dataModel";
 import Image from "next/image";
 import { ImageUpload } from "./image-upload";
+import { toast } from "sonner";
 
 interface CategoryForm {
   name: string;
@@ -232,7 +244,7 @@ export function CategoriesManagement() {
     e.preventDefault();
 
     if (!categoryForm.image) {
-      alert("Please upload a category image");
+      toast.error("Please upload a category image");
       return;
     }
 
@@ -245,17 +257,19 @@ export function CategoriesManagement() {
         });
         setIsEditDialogOpen(false);
         setEditingCategory(null);
+        toast.success("Category updated successfully!");
       } else {
         await createCategory({
           ...categoryForm,
           image: categoryForm.image as Id<"_storage">,
         });
         setIsAddDialogOpen(false);
+        toast.success("Category created successfully!");
       }
       resetForm();
     } catch (error) {
       console.error("Failed to save category:", error);
-      alert("Failed to save category. Please try again.");
+      toast.error("Failed to save category. Please try again.");
     }
   };
 
@@ -280,20 +294,18 @@ export function CategoriesManagement() {
     }
   }, [categoryForEdit, editingCategory]);
 
-  const handleDelete = async (categoryId: Id<"categories">) => {
-    if (
-      confirm(
-        "Are you sure you want to delete this category? This action cannot be undone."
-      )
-    ) {
-      try {
-        await deleteCategory({ categoryId });
-      } catch (error) {
-        console.error("Failed to delete category:", error);
-        alert(
-          "Failed to delete category. It may have products assigned to it."
-        );
-      }
+  const handleDelete = async (
+    categoryId: Id<"categories">,
+    categoryName: string
+  ) => {
+    try {
+      await deleteCategory({ categoryId });
+      toast.success(`Category "${categoryName}" deleted successfully!`);
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+      toast.error(
+        "Failed to delete category. It may have products assigned to it."
+      );
     }
   };
 
@@ -407,14 +419,42 @@ export function CategoriesManagement() {
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(category._id)}
-                          className="cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="cursor-pointer"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete Category
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete the category
+                                &quot;
+                                {category.name}&quot;? This action cannot be
+                                undone and may affect products assigned to this
+                                category.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleDelete(category._id, category.name)
+                                }
+                                className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>

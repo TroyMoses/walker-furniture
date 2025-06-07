@@ -29,6 +29,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Search,
   Mail,
   Trash2,
@@ -39,6 +50,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import type { Id } from "@/convex/_generated/dataModel";
+import { toast } from "sonner";
 
 export function NewsletterManagement() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,18 +93,23 @@ export function NewsletterManagement() {
   ) => {
     try {
       await updateSubscriptionStatus({ subscriptionId, status: newStatus });
+      toast.success("Subscription status updated successfully!");
     } catch (error) {
       console.error("Failed to update subscription status:", error);
+      toast.error("Failed to update subscription status. Please try again.");
     }
   };
 
-  const handleDelete = async (subscriptionId: Id<"newsletter">) => {
-    if (confirm("Are you sure you want to delete this subscription?")) {
-      try {
-        await deleteSubscription({ subscriptionId });
-      } catch (error) {
-        console.error("Failed to delete subscription:", error);
-      }
+  const handleDelete = async (
+    subscriptionId: Id<"newsletter">,
+    email: string
+  ) => {
+    try {
+      await deleteSubscription({ subscriptionId });
+      toast.success(`Subscription for ${email} deleted successfully!`);
+    } catch (error) {
+      console.error("Failed to delete subscription:", error);
+      toast.error("Failed to delete subscription. Please try again.");
     }
   };
 
@@ -119,6 +136,7 @@ export function NewsletterManagement() {
     a.download = `newsletter-subscriptions-${format(new Date(), "yyyy-MM-dd")}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
+    toast.success("Newsletter subscriptions exported successfully!");
   };
 
   if (!subscriptions || !stats) {
@@ -216,12 +234,22 @@ export function NewsletterManagement() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="cursor-pointer">All Subscribers</SelectItem>
-            <SelectItem value="active" className="cursor-pointer">Active</SelectItem>
-            <SelectItem value="unsubscribed" className="cursor-pointer">Unsubscribed</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">
+              All Subscribers
+            </SelectItem>
+            <SelectItem value="active" className="cursor-pointer">
+              Active
+            </SelectItem>
+            <SelectItem value="unsubscribed" className="cursor-pointer">
+              Unsubscribed
+            </SelectItem>
           </SelectContent>
         </Select>
-        <Button onClick={exportSubscriptions} variant="outline" className="cursor-pointer">
+        <Button
+          onClick={exportSubscriptions}
+          variant="outline"
+          className="cursor-pointer"
+        >
           <Download className="h-4 w-4 mr-2" />
           Export CSV
         </Button>
@@ -279,24 +307,62 @@ export function NewsletterManagement() {
                             handleStatusUpdate(subscription._id, value)
                           }
                         >
-                          <SelectTrigger className="w-32">
+                          <SelectTrigger className="w-32 cursor-pointer">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="unsubscribed">
+                            <SelectItem
+                              value="active"
+                              className="cursor-pointer"
+                            >
+                              Active
+                            </SelectItem>
+                            <SelectItem
+                              value="unsubscribed"
+                              className="cursor-pointer"
+                            >
                               Unsubscribed
                             </SelectItem>
                           </SelectContent>
                         </Select>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(subscription._id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700 cursor-pointer"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete Subscription
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete the subscription
+                                for &quot;
+                                {subscription.email}
+                                &quot;? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleDelete(
+                                    subscription._id,
+                                    subscription.email
+                                  )
+                                }
+                                className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>

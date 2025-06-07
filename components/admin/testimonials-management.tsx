@@ -34,6 +34,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -54,6 +65,7 @@ import {
 import { format } from "date-fns";
 import type { Id } from "@/convex/_generated/dataModel";
 import Image from "next/image";
+import { toast } from "sonner";
 
 // Define the Testimonial type based on usage in this file
 interface Testimonial {
@@ -145,11 +157,21 @@ const TestimonialFormComponent: React.FC<TestimonialFormProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="5" className="cursor-pointer">5 Stars</SelectItem>
-              <SelectItem value="4" className="cursor-pointer">4 Stars</SelectItem>
-              <SelectItem value="3" className="cursor-pointer">3 Stars</SelectItem>
-              <SelectItem value="2" className="cursor-pointer">2 Stars</SelectItem>
-              <SelectItem value="1" className="cursor-pointer">1 Star</SelectItem>
+              <SelectItem value="5" className="cursor-pointer">
+                5 Stars
+              </SelectItem>
+              <SelectItem value="4" className="cursor-pointer">
+                4 Stars
+              </SelectItem>
+              <SelectItem value="3" className="cursor-pointer">
+                3 Stars
+              </SelectItem>
+              <SelectItem value="2" className="cursor-pointer">
+                2 Stars
+              </SelectItem>
+              <SelectItem value="1" className="cursor-pointer">
+                1 Star
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -166,7 +188,11 @@ const TestimonialFormComponent: React.FC<TestimonialFormProps> = ({
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category} value={category} className="cursor-pointer">
+                <SelectItem
+                  key={category}
+                  value={category}
+                  className="cursor-pointer"
+                >
                   {category}
                 </SelectItem>
               ))}
@@ -206,7 +232,12 @@ const TestimonialFormComponent: React.FC<TestimonialFormProps> = ({
       </div>
 
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          className="cursor-pointer"
+        >
           Cancel
         </Button>
         <Button type="submit" className="cursor-pointer">
@@ -312,16 +343,19 @@ export function TestimonialsManagement() {
         });
         setIsEditDialogOpen(false);
         setEditingTestimonial(null);
+        toast.success("Testimonial updated successfully!");
       } else {
         await createTestimonial({
           ...testimonialForm,
           status: "approved", // Admin-created testimonials are auto-approved
         });
         setIsAddDialogOpen(false);
+        toast.success("Testimonial created successfully!");
       }
       resetForm();
     } catch (error) {
       console.error("Failed to save testimonial:", error);
+      toast.error("Failed to save testimonial. Please try again.");
     }
   };
 
@@ -344,18 +378,23 @@ export function TestimonialsManagement() {
   ) => {
     try {
       await updateTestimonialStatus({ testimonialId, status: newStatus });
+      toast.success("Testimonial status updated successfully!");
     } catch (error) {
       console.error("Failed to update testimonial status:", error);
+      toast.error("Failed to update testimonial status. Please try again.");
     }
   };
 
-  const handleDelete = async (testimonialId: Id<"testimonials">) => {
-    if (confirm("Are you sure you want to delete this testimonial?")) {
-      try {
-        await deleteTestimonial({ testimonialId });
-      } catch (error) {
-        console.error("Failed to delete testimonial:", error);
-      }
+  const handleDelete = async (
+    testimonialId: Id<"testimonials">,
+    customerName: string
+  ) => {
+    try {
+      await deleteTestimonial({ testimonialId });
+      toast.success(`Testimonial by ${customerName} deleted successfully!`);
+    } catch (error) {
+      console.error("Failed to delete testimonial:", error);
+      toast.error("Failed to delete testimonial. Please try again.");
     }
   };
 
@@ -396,10 +435,18 @@ export function TestimonialsManagement() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="cursor-pointer">All Testimonials</SelectItem>
-            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
-            <SelectItem value="approved" className="cursor-pointer">Approved</SelectItem>
-            <SelectItem value="rejected" className="cursor-pointer">Rejected</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">
+              All Testimonials
+            </SelectItem>
+            <SelectItem value="pending" className="cursor-pointer">
+              Pending
+            </SelectItem>
+            <SelectItem value="approved" className="cursor-pointer">
+              Approved
+            </SelectItem>
+            <SelectItem value="rejected" className="cursor-pointer">
+              Rejected
+            </SelectItem>
           </SelectContent>
         </Select>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -409,7 +456,11 @@ export function TestimonialsManagement() {
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
             {categories.map((category) => (
-              <SelectItem key={category} value={category} className="cursor-pointer">
+              <SelectItem
+                key={category}
+                value={category}
+                className="cursor-pointer"
+              >
                 {category}
               </SelectItem>
             ))}
@@ -621,13 +672,22 @@ export function TestimonialsManagement() {
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="pending" className="cursor-pointer">
+                                        <SelectItem
+                                          value="pending"
+                                          className="cursor-pointer"
+                                        >
                                           Pending
                                         </SelectItem>
-                                        <SelectItem value="approved" className="cursor-pointer">
+                                        <SelectItem
+                                          value="approved"
+                                          className="cursor-pointer"
+                                        >
                                           Approved
                                         </SelectItem>
-                                        <SelectItem value="rejected" className="cursor-pointer">
+                                        <SelectItem
+                                          value="rejected"
+                                          className="cursor-pointer"
+                                        >
                                           Rejected
                                         </SelectItem>
                                       </SelectContent>
@@ -642,16 +702,47 @@ export function TestimonialsManagement() {
                                       <Edit className="h-4 w-4 mr-2" />
                                       Edit
                                     </Button>
-                                    <Button
-                                      variant="destructive"
-                                      onClick={() =>
-                                        handleDelete(selectedTestimonial._id)
-                                      }
-                                      className="cursor-pointer"
-                                    >
-                                      <Trash2 className="h-4 w-4 mr-2" />
-                                      Delete
-                                    </Button>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button
+                                          variant="destructive"
+                                          className="cursor-pointer"
+                                        >
+                                          <Trash2 className="h-4 w-4 mr-2" />
+                                          Delete
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>
+                                            Delete Testimonial
+                                          </AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Are you sure you want to delete the
+                                            testimonial by &quot;
+                                            {selectedTestimonial.customerName}
+                                            &quot;? This action cannot be
+                                            undone.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel className="cursor-pointer">
+                                            Cancel
+                                          </AlertDialogCancel>
+                                          <AlertDialogAction
+                                            onClick={() =>
+                                              handleDelete(
+                                                selectedTestimonial._id,
+                                                selectedTestimonial.customerName
+                                              )
+                                            }
+                                            className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                                          >
+                                            Delete
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
                                   </div>
                                 </div>
                               </div>
@@ -676,9 +767,24 @@ export function TestimonialsManagement() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
-                            <SelectItem value="approved" className="cursor-pointer">Approved</SelectItem>
-                            <SelectItem value="rejected" className="cursor-pointer">Rejected</SelectItem>
+                            <SelectItem
+                              value="pending"
+                              className="cursor-pointer"
+                            >
+                              Pending
+                            </SelectItem>
+                            <SelectItem
+                              value="approved"
+                              className="cursor-pointer"
+                            >
+                              Approved
+                            </SelectItem>
+                            <SelectItem
+                              value="rejected"
+                              className="cursor-pointer"
+                            >
+                              Rejected
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
