@@ -30,6 +30,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -45,9 +56,12 @@ import {
   CheckCircle,
   XCircle,
   Clock,
+  Trash2,
+  Mail,
 } from "lucide-react";
 import { format } from "date-fns";
 import type { Id } from "@/convex/_generated/dataModel";
+import { toast } from "sonner";
 
 export function ReviewsManagement() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -106,18 +120,23 @@ export function ReviewsManagement() {
   ) => {
     try {
       await updateReviewStatus({ reviewId, status: newStatus });
+      toast.success("Review status updated successfully!");
     } catch (error) {
       console.error("Failed to update review status:", error);
+      toast.error("Failed to update review status. Please try again.");
     }
   };
 
-  const handleDelete = async (reviewId: Id<"reviews">) => {
-    if (confirm("Are you sure you want to delete this review?")) {
-      try {
-        await deleteReview({ reviewId });
-      } catch (error) {
-        console.error("Failed to delete review:", error);
-      }
+  const handleDelete = async (
+    reviewId: Id<"reviews">,
+    customerName: string
+  ) => {
+    try {
+      await deleteReview({ reviewId });
+      toast.success(`Review by ${customerName} deleted successfully!`);
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      toast.error("Failed to delete review. Please try again.");
     }
   };
 
@@ -151,10 +170,18 @@ export function ReviewsManagement() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="cursor-pointer">All Reviews</SelectItem>
-            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
-            <SelectItem value="approved" className="cursor-pointer">Approved</SelectItem>
-            <SelectItem value="rejected" className="cursor-pointer">Rejected</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">
+              All Reviews
+            </SelectItem>
+            <SelectItem value="pending" className="cursor-pointer">
+              Pending
+            </SelectItem>
+            <SelectItem value="approved" className="cursor-pointer">
+              Approved
+            </SelectItem>
+            <SelectItem value="rejected" className="cursor-pointer">
+              Rejected
+            </SelectItem>
           </SelectContent>
         </Select>
         <Select value={ratingFilter} onValueChange={setRatingFilter}>
@@ -162,12 +189,24 @@ export function ReviewsManagement() {
             <SelectValue placeholder="Rating" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="cursor-pointer">All Ratings</SelectItem>
-            <SelectItem value="5" className="cursor-pointer">5 Stars</SelectItem>
-            <SelectItem value="4" className="cursor-pointer">4 Stars</SelectItem>
-            <SelectItem value="3" className="cursor-pointer">3 Stars</SelectItem>
-            <SelectItem value="2" className="cursor-pointer">2 Stars</SelectItem>
-            <SelectItem value="1" className="cursor-pointer">1 Star</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">
+              All Ratings
+            </SelectItem>
+            <SelectItem value="5" className="cursor-pointer">
+              5 Stars
+            </SelectItem>
+            <SelectItem value="4" className="cursor-pointer">
+              4 Stars
+            </SelectItem>
+            <SelectItem value="3" className="cursor-pointer">
+              3 Stars
+            </SelectItem>
+            <SelectItem value="2" className="cursor-pointer">
+              2 Stars
+            </SelectItem>
+            <SelectItem value="1" className="cursor-pointer">
+              1 Star
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -258,6 +297,7 @@ export function ReviewsManagement() {
                               variant="outline"
                               size="sm"
                               onClick={() => setSelectedReview(review)}
+                              className="cursor-pointer"
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
@@ -277,7 +317,8 @@ export function ReviewsManagement() {
                                       Customer Information
                                     </h4>
                                     <p>{selectedReview.customerName}</p>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-gray-500 flex items-center gap-1">
+                                      <Mail className="h-3 w-3" />
                                       {selectedReview.customerEmail}
                                     </p>
                                     {selectedReview.verified && (
@@ -329,9 +370,7 @@ export function ReviewsManagement() {
                                   </div>
                                 )}
                                 <div>
-                                  <h4 className="font-medium mb-2">
-                                    Update Status
-                                  </h4>
+                                  <h4 className="font-medium mb-2">Actions</h4>
                                   <div className="flex gap-2">
                                     <Select
                                       value={selectedReview.status}
@@ -342,29 +381,70 @@ export function ReviewsManagement() {
                                         )
                                       }
                                     >
-                                      <SelectTrigger>
+                                      <SelectTrigger className="cursor-pointer">
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="pending">
+                                        <SelectItem
+                                          value="pending"
+                                          className="cursor-pointer"
+                                        >
                                           Pending
                                         </SelectItem>
-                                        <SelectItem value="approved">
+                                        <SelectItem
+                                          value="approved"
+                                          className="cursor-pointer"
+                                        >
                                           Approved
                                         </SelectItem>
-                                        <SelectItem value="rejected">
+                                        <SelectItem
+                                          value="rejected"
+                                          className="cursor-pointer"
+                                        >
                                           Rejected
                                         </SelectItem>
                                       </SelectContent>
                                     </Select>
-                                    <Button
-                                      variant="destructive"
-                                      onClick={() =>
-                                        handleDelete(selectedReview._id)
-                                      }
-                                    >
-                                      Delete Review
-                                    </Button>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button
+                                          variant="destructive"
+                                          className="cursor-pointer"
+                                        >
+                                          <Trash2 className="h-4 w-4 mr-2" />
+                                          Delete Review
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>
+                                            Delete Review
+                                          </AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Are you sure you want to delete the
+                                            review by &quot;
+                                            {selectedReview.customerName}
+                                            &quot;? This action cannot be undone.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel className="cursor-pointer">
+                                            Cancel
+                                          </AlertDialogCancel>
+                                          <AlertDialogAction
+                                            onClick={() =>
+                                              handleDelete(
+                                                selectedReview._id,
+                                                selectedReview.customerName
+                                              )
+                                            }
+                                            className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                                          >
+                                            Delete
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
                                   </div>
                                 </div>
                               </div>
@@ -377,13 +457,28 @@ export function ReviewsManagement() {
                             handleStatusUpdate(review._id, value)
                           }
                         >
-                          <SelectTrigger className="w-32">
+                          <SelectTrigger className="w-32 cursor-pointer">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="approved">Approved</SelectItem>
-                            <SelectItem value="rejected">Rejected</SelectItem>
+                            <SelectItem
+                              value="pending"
+                              className="cursor-pointer"
+                            >
+                              Pending
+                            </SelectItem>
+                            <SelectItem
+                              value="approved"
+                              className="cursor-pointer"
+                            >
+                              Approved
+                            </SelectItem>
+                            <SelectItem
+                              value="rejected"
+                              className="cursor-pointer"
+                            >
+                              Rejected
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

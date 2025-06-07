@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 
 import { useState, useRef } from "react";
 import { useMutation } from "convex/react";
@@ -13,8 +13,8 @@ import type { Id } from "@/convex/_generated/dataModel";
 import Image from "next/image";
 
 interface ImageUploadProps {
-  images: string[];
-  onImagesChange: (images: string[]) => void;
+  images: string[]; // These will be storage IDs
+  onImagesChange: (images: string[]) => void; // These will be storage IDs
   maxImages?: number;
 }
 
@@ -27,10 +27,43 @@ export function ImageUpload({
   const [uploadProgress, setUploadProgress] = useState<{
     [key: string]: number;
   }>({});
+  const [imageUrls, setImageUrls] = useState<{ [key: string]: string }>({}); // Cache URLs for preview
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const getImageUrl = useMutation(api.files.getImageUrl);
   const deleteFile = useMutation(api.files.deleteFile);
+
+  // Load image URLs for preview when component mounts or images change
+  React.useEffect(() => {
+    const loadImageUrls = async () => {
+      const urlPromises = images.map(async (storageId) => {
+        if (!imageUrls[storageId]) {
+          try {
+            const url = await getImageUrl({
+              storageId: storageId as Id<"_storage">,
+            });
+            return { storageId, url };
+          } catch {
+            return { storageId, url: "/placeholder.svg?height=150&width=150" };
+          }
+        }
+        return { storageId, url: imageUrls[storageId] };
+      });
+
+      const results = await Promise.all(urlPromises);
+      const newUrls = { ...imageUrls };
+      results.forEach(({ storageId, url }) => {
+        if (url) newUrls[storageId] = url;
+      });
+      setImageUrls(newUrls);
+      console.log("Image URLs Loaded:", newUrls)
+    };
+
+    if (images.length > 0) {
+      loadImageUrls();
+    }
+  }, [images, getImageUrl]);
 
   // Helper function to handle file uploads from both input and drop
   const uploadFiles = async (files: File[]) => {
@@ -77,10 +110,8 @@ export function ImageUpload({
             if (xhr.status === 200) {
               const response = JSON.parse(xhr.responseText);
               const storageId = response.storageId;
-              // Return the full URL that Convex will serve
-              resolve(
-                `https://abundant-akita-464.convex.cloud/api/storage/${storageId}`
-              );
+              // Return just the storage ID, not the full URL
+              resolve(storageId);
             } else {
               reject(new Error(`Upload failed: ${xhr.statusText}`));
             }
@@ -95,8 +126,8 @@ export function ImageUpload({
         });
       });
 
-      const uploadedUrls = await Promise.all(uploadPromises);
-      onImagesChange([...images, ...uploadedUrls]);
+      const uploadedStorageIds = await Promise.all(uploadPromises);
+      onImagesChange([...images, ...uploadedStorageIds]);
     } catch (error) {
       console.error("Upload failed:", error);
       alert(error instanceof Error ? error.message : "Upload failed");
@@ -117,20 +148,21 @@ export function ImageUpload({
   };
 
   const removeImage = async (index: number) => {
-    const imageUrl = images[index];
+    const storageId = images[index];
 
-    // Extract storage ID from URL if it's a Convex storage URL
-    if (imageUrl.includes("convex.cloud/api/storage/")) {
-      try {
-        const storageId = imageUrl.split("/").pop() as Id<"_storage">;
-        await deleteFile({ storageId });
-      } catch (error) {
-        console.error("Failed to delete file:", error);
-      }
+    try {
+      await deleteFile({ storageId: storageId as Id<"_storage"> });
+    } catch (error) {
+      console.error("Failed to delete file:", error);
     }
 
     const newImages = images.filter((_, i) => i !== index);
     onImagesChange(newImages);
+
+    // Remove from URL cache
+    const newUrls = { ...imageUrls };
+    delete newUrls[storageId];
+    setImageUrls(newUrls);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -205,19 +237,22 @@ export function ImageUpload({
       {/* Image Preview Grid */}
       {images.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <Card key={index} className="relative group">
+          {images.map((storageId, index) => (
+            <Card key={storageId} className="relative group">
               <CardContent className="p-2">
                 <div className="relative aspect-square">
                   <Image
                     fill
-                    src={image || "/placeholder.png"}
+                    src={
+                      imageUrls[storageId] ||
+                      "/placeholder.svg?height=150&width=150"
+                    }
                     alt={`Product image ${index + 1}`}
                     className="w-full h-full object-cover rounded"
                     onError={(e) => {
                       // Fallback for broken images
                       const target = e.target as HTMLImageElement;
-                      target.src = "/placeholder.png";
+                      target.src = "/placeholder.svg?height=150&width=150";
                     }}
                   />
                   <Button

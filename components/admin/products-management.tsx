@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
@@ -39,11 +39,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search, Star } from "lucide-react";
 import type { Id } from "@/convex/_generated/dataModel";
 import Image from "next/image";
 import { ImageUpload } from "./image-upload";
+import { toast } from "sonner";
 
 interface ProductForm {
   name: string;
@@ -429,19 +441,16 @@ export function ProductsManagement() {
   });
 
   const products = useQuery(api.products.getAllProducts, {});
+  const productForEdit = useQuery(
+    api.products.getProductForEdit,
+    editingProduct ? { productId: editingProduct } : "skip"
+  );
   const createProduct = useMutation(api.products.createProduct);
   const updateProduct = useMutation(api.products.updateProduct);
   const deleteProduct = useMutation(api.products.deleteProduct);
 
-  const categories = [
-    "Sofas",
-    "Chairs",
-    "Tables",
-    "Beds",
-    "Storage",
-    "Lighting",
-    "Decor",
-  ];
+  const categoriesData = useQuery(api.categories.getActiveCategories, {});
+  const categories = categoriesData?.map((cat) => cat.name) || [];
 
   const filteredProducts = products?.filter((product) => {
     const matchesSearch =
@@ -476,7 +485,7 @@ export function ProductsManagement() {
     e.preventDefault();
 
     if (productForm.images.length === 0) {
-      alert("Please upload at least one product image");
+      toast.error("Please upload at least one product image");
       return;
     }
 
@@ -485,21 +494,23 @@ export function ProductsManagement() {
         await updateProduct({
           productId: editingProduct,
           ...productForm,
-          images: productForm.images, // Remove the cast to Id<"_storage">[]
+          images: productForm.images as Id<"_storage">[],
         });
         setIsEditDialogOpen(false);
         setEditingProduct(null);
+        toast.success("Product updated successfully!");
       } else {
         await createProduct({
           ...productForm,
-          images: productForm.images, // Remove the cast to Id<"_storage">[]
+          images: productForm.images as Id<"_storage">[],
         });
         setIsAddDialogOpen(false);
+        toast.success("Product created successfully!");
       }
       resetForm();
     } catch (error) {
       console.error("Failed to save product:", error);
-      alert("Failed to save product. Please try again.");
+      toast.error("Failed to save product. Please try again.");
     }
   };
 
@@ -507,38 +518,42 @@ export function ProductsManagement() {
 
   const handleEdit = (product: ProductType) => {
     setEditingProduct(product._id);
-    setProductForm({
-      name: product.name,
-      description: product.description,
-      longDescription: product.longDescription || "",
-      price: product.price,
-      category: product.category,
-      rating: product.rating || 4.5,
-      reviewCount: product.reviewCount || 0,
-      colors: product.colors || [],
-      images: product.images || [],
-      specifications: product.specifications || [],
-      features: product.features || [],
-      care: product.care || [],
-      inStock: product.inStock,
-      isNew: product.isNew || false,
-      isBestseller: product.isBestseller || false,
-    });
     setIsEditDialogOpen(true);
   };
 
-  const handleDelete = async (productId: Id<"products">) => {
-    if (
-      confirm(
-        "Are you sure you want to delete this product? This action cannot be undone."
-      )
-    ) {
-      try {
-        await deleteProduct({ productId });
-      } catch (error) {
-        console.error("Failed to delete product:", error);
-        alert("Failed to delete product. Please try again.");
-      }
+  // Update form when productForEdit data is loaded
+  React.useEffect(() => {
+    if (productForEdit && editingProduct) {
+      setProductForm({
+        name: productForEdit.name,
+        description: productForEdit.description,
+        longDescription: productForEdit.longDescription || "",
+        price: productForEdit.price,
+        category: productForEdit.category,
+        rating: productForEdit.rating || 4.5,
+        reviewCount: productForEdit.reviewCount || 0,
+        colors: productForEdit.colors || [],
+        images: productForEdit.images || [], // These are storage IDs from the database
+        specifications: productForEdit.specifications || [],
+        features: productForEdit.features || [],
+        care: productForEdit.care || [],
+        inStock: productForEdit.inStock,
+        isNew: productForEdit.isNew || false,
+        isBestseller: productForEdit.isBestseller || false,
+      });
+    }
+  }, [productForEdit, editingProduct]);
+
+  const handleDelete = async (
+    productId: Id<"products">,
+    productName: string
+  ) => {
+    try {
+      await deleteProduct({ productId });
+      toast.success(`Product "${productName}" deleted successfully!`);
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      toast.error("Failed to delete product. Please try again.");
     }
   };
 
@@ -635,12 +650,16 @@ export function ProductsManagement() {
                           width={40}
                           height={40}
                           src={
-                            product.images?.[0] ||
-                            "/placeholder.png" ||
-                            "/placeholder.svg"
+                            product.images?.[0] && product.images[0] !== ""
+                              ? product.images[0]
+                              : "/placeholder.png"
                           }
                           alt={product.name}
                           className="h-10 w-10 rounded object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "/placeholder.png";
+                          }}
                         />
                         <div>
                           <div className="font-medium">{product.name}</div>
@@ -689,14 +708,41 @@ export function ProductsManagement() {
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(product._id)}
-                          className="cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="cursor-pointer"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete Product
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete &quot;
+                                {product.name}&quot;? This action cannot be
+                                undone and will remove the product from all
+                                orders and reviews.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleDelete(product._id, product.name)
+                                }
+                                className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>

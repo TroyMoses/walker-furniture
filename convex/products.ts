@@ -11,14 +11,12 @@ export const getAllProducts = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -33,6 +31,18 @@ export const getAllProducts = query({
   },
 });
 
+// Add a new query to get product with storage IDs for editing
+export const getProductForEdit = query({
+  args: { productId: v.id("products") },
+  handler: async (ctx, args) => {
+    const product = await ctx.db.get(args.productId);
+    if (!product) return null;
+
+    // Return product with original storage IDs (not converted to URLs)
+    return product;
+  },
+});
+
 export const getProductById = query({
   args: { productId: v.id("products") },
   handler: async (ctx, args) => {
@@ -41,14 +51,12 @@ export const getProductById = query({
 
     // Convert image storage IDs to URLs
     const imageUrls = await Promise.all(
-      product.images.map(async (imageId) => {
-        if (typeof imageId === "string" && imageId.startsWith("http")) {
-          return imageId; // Already a URL
-        }
+      (product.images || []).map(async (imageId) => {
         try {
-          return await ctx.storage.getUrl(imageId as Id<"_storage">);
+          const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+          return url || "/placeholder.png";
         } catch {
-          return "/placeholder.png"; // Fallback for invalid IDs
+          return "/placeholder.png";
         }
       })
     );
@@ -80,14 +88,12 @@ export const getProductsByCategory = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -104,21 +110,28 @@ export const getProductsByCategory = query({
 
 export const searchProducts = query({
   args: {
-    searchTerm: v.string(),
+    searchTerm: v.optional(v.string()),
     category: v.optional(v.string()),
+    minPrice: v.optional(v.number()),
+    maxPrice: v.optional(v.number()),
+    minRating: v.optional(v.number()),
     sortBy: v.optional(v.string()),
+    inStock: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     let products = await ctx.db.query("products").collect();
 
     // Filter by search term
-    if (args.searchTerm) {
+    if (args.searchTerm && args.searchTerm.trim()) {
       const searchLower = args.searchTerm.toLowerCase();
       products = products.filter(
         (product) =>
           product.name.toLowerCase().includes(searchLower) ||
           product.description.toLowerCase().includes(searchLower) ||
-          product.category.toLowerCase().includes(searchLower)
+          product.category.toLowerCase().includes(searchLower) ||
+          (product.features || []).some((feature) =>
+            feature.toLowerCase().includes(searchLower)
+          )
       );
     }
 
@@ -127,6 +140,26 @@ export const searchProducts = query({
       products = products.filter(
         (product) => product.category === args.category
       );
+    }
+
+    // Filter by price range
+    if (args.minPrice !== undefined) {
+      products = products.filter((product) => product.price >= args.minPrice!);
+    }
+    if (args.maxPrice !== undefined) {
+      products = products.filter((product) => product.price <= args.maxPrice!);
+    }
+
+    // Filter by minimum rating
+    if (args.minRating !== undefined) {
+      products = products.filter(
+        (product) => (product.rating || 0) >= args.minRating!
+      );
+    }
+
+    // Filter by stock status
+    if (args.inStock !== undefined) {
+      products = products.filter((product) => product.inStock === args.inStock);
     }
 
     // Sort products
@@ -139,14 +172,21 @@ export const searchProducts = query({
           products.sort((a, b) => b.price - a.price);
           break;
         case "rating":
-          products.sort((a, b) => b.rating - a.rating);
+          products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
           break;
         case "newest":
           products.sort((a, b) => b._creationTime - a._creationTime);
           break;
-        default:
-          // Default sort by name
+        case "name":
           products.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        default:
+          // Default sort by featured/bestsellers first, then by name
+          products.sort((a, b) => {
+            if (a.isBestseller && !b.isBestseller) return -1;
+            if (!a.isBestseller && b.isBestseller) return 1;
+            return a.name.localeCompare(b.name);
+          });
       }
     }
 
@@ -154,14 +194,12 @@ export const searchProducts = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -188,14 +226,12 @@ export const getFeaturedProducts = query({
     const productsWithImageUrls = await Promise.all(
       products.map(async (product) => {
         const imageUrls = await Promise.all(
-          product.images.map(async (imageId) => {
-            if (typeof imageId === "string" && imageId.startsWith("http")) {
-              return imageId; // Already a URL
-            }
+          (product.images || []).map(async (imageId) => {
             try {
-              return await ctx.storage.getUrl(imageId as Id<"_storage">);
+              const url = await ctx.storage.getUrl(imageId as Id<"_storage">);
+              return url || "/placeholder.png";
             } catch {
-              return "/placeholder.png"; // Fallback for invalid IDs
+              return "/placeholder.png";
             }
           })
         );
@@ -228,7 +264,7 @@ export const createProduct = mutation({
     longDescription: v.string(),
     price: v.number(),
     category: v.string(),
-    images: v.array(v.string()),
+    images: v.array(v.id("_storage")),
     colors: v.array(v.string()),
     specifications: v.array(
       v.object({
@@ -266,7 +302,7 @@ export const updateProduct = mutation({
     longDescription: v.optional(v.string()),
     price: v.optional(v.number()),
     category: v.optional(v.string()),
-    images: v.optional(v.array(v.string())),
+    images: v.optional(v.array(v.id("_storage"))),
     colors: v.optional(v.array(v.string())),
     specifications: v.optional(
       v.array(

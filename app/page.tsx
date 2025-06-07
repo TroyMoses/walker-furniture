@@ -1,16 +1,26 @@
-import { CategoryCard } from "@/components/category-card";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HeroSection } from "@/components/hero-section";
-import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
 import { TestimonialCard } from "@/components/testimonial-card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { api } from "@/convex/_generated/api";
+import { preloadQuery } from "convex/nextjs";
+import { HomeCategoriesSection } from "@/components/home-categories-section";
+import { HomeFeaturedProductsSection } from "@/components/home-featured-products-section";
 
-export default function Home() {
+export default async function Home() {
+  // Preload data for better performance
+  const categoriesQuery = await preloadQuery(
+    api.categories.getActiveCategories,
+    {}
+  );
+  const featuredProductsQuery = await preloadQuery(
+    api.products.getFeaturedProducts,
+    {}
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
       <Header />
@@ -25,110 +35,10 @@ export default function Home() {
       />
 
       {/* Featured Categories */}
-      <section className="pt-16 pb-4 md:pb-8 px-3 md:px-10 bg-gradient-to-b from-white to-amber-50/30">
-        <div className="container">
-          <SectionHeading
-            title="Our Collections"
-            subtitle="Explore our carefully curated furniture collections"
-          />
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {[
-              {
-                title: "Living Room",
-                description: "Elegant sofas, coffee tables, and accent pieces",
-                image: "/images/living/product2.jpeg",
-                href: "/products?category=living-room",
-              },
-              {
-                title: "Bedroom",
-                description: "Comfortable beds, dressers, and nightstands",
-                image: "/images/beds/bed1.jpeg",
-                href: "/products?category=bedroom",
-              },
-              {
-                title: "Dining",
-                description: "Stylish dining tables, chairs, and buffets",
-                image: "/images/dining/diningtable.jpeg",
-                href: "/products?category=dining",
-              },
-            ].map((category, index) => (
-              <CategoryCard
-                key={index}
-                title={category.title}
-                description={category.description}
-                image={category.image}
-                href={category.href}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeCategoriesSection preloadedCategories={categoriesQuery} />
 
       {/* Featured Products */}
-      <section
-        id="products"
-        className="bg-gradient-to-b from-amber-50/30 to-white pt-16 pb-4 md:pb-8 px-3 md:px-10"
-      >
-        <div className="container">
-          <SectionHeading
-            title="Featured Products"
-            subtitle="Our most popular handcrafted pieces"
-          />
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                id: "oakwood-sofa",
-                name: "Oakwood Sofa",
-                price: "$1,299",
-                image: "/images/couches/couches.jpeg",
-                rating: 4.8,
-                category: "Living Room",
-              },
-              {
-                id: "maple-dining-table",
-                name: "Maple Dining Table",
-                price: "$899",
-                image: "/images/dining/diningtable3.jpeg",
-                rating: 4.5,
-                category: "Dining",
-              },
-              {
-                id: "walnut-bed-frame",
-                name: "Walnut Bed Frame",
-                price: "$1,499",
-                image: "/images/beds/bed4.jpeg",
-                rating: 4.9,
-                category: "Bedroom",
-              },
-              {
-                id: "cherry-bookcase",
-                name: "Cherry Wood Bookcase",
-                price: "$749",
-                image: "/images/library/library.jpeg",
-                rating: 4.6,
-                category: "Living Room",
-              },
-            ].map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                rating={product.rating}
-                category={product.category}
-              />
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <Button variant="outline" className="gap-2 border-amber-800" asChild>
-              <Link href="/products">
-                View All Products <ChevronRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <HomeFeaturedProductsSection preloadedProducts={featuredProductsQuery} />
 
       {/* About Section */}
       <section
@@ -151,10 +61,11 @@ export default function Home() {
                 About Exit Exit Walker Furniture
               </h2>
               <p className="mb-4 text-gray-700">
-                Since 2017, Exit Walker Furniture has been crafting high-quality,
-                sustainable furniture that stands the test of time. Our master
-                craftsmen combine traditional woodworking techniques with modern
-                design to create pieces that are both functional and beautiful.
+                Since 2017, Exit Walker Furniture has been crafting
+                high-quality, sustainable furniture that stands the test of
+                time. Our master craftsmen combine traditional woodworking
+                techniques with modern design to create pieces that are both
+                functional and beautiful.
               </p>
               <p className="mb-6 text-gray-700">
                 We source our materials responsibly, working with local
@@ -164,9 +75,12 @@ export default function Home() {
                 generations.
               </p>
               <div className="flex justify-center md:justify-start">
-              <Button className="w-fit bg-amber-800 hover:bg-amber-900" asChild>
-                <a href="/about">Learn Our Story</a>
-              </Button>
+                <Button
+                  className="w-fit bg-amber-800 hover:bg-amber-900"
+                  asChild
+                >
+                  <a href="/about">Learn Our Story</a>
+                </Button>
               </div>
             </div>
           </div>
