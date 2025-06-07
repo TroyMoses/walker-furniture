@@ -55,6 +55,19 @@ import { format } from "date-fns";
 import type { Id } from "@/convex/_generated/dataModel";
 import Image from "next/image";
 
+// Define the Testimonial type based on usage in this file
+interface Testimonial {
+  _id: Id<"testimonials">;
+  customerName: string;
+  customerEmail: string;
+  content: string;
+  rating: number;
+  category: string;
+  featured?: boolean;
+  status: string;
+  _creationTime: string | number | Date;
+}
+
 interface TestimonialForm {
   customerName: string;
   customerEmail: string;
@@ -64,6 +77,146 @@ interface TestimonialForm {
   featured: boolean;
 }
 
+interface TestimonialFormProps {
+  testimonialForm: TestimonialForm;
+  setTestimonialForm: React.Dispatch<React.SetStateAction<TestimonialForm>>;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onCancel: () => void;
+  editingTestimonial: Testimonial | null;
+  categories: string[];
+}
+
+// Move TestimonialForm component outside to prevent re-creation on every render
+const TestimonialFormComponent: React.FC<TestimonialFormProps> = ({
+  testimonialForm,
+  setTestimonialForm,
+  onSubmit,
+  onCancel,
+  editingTestimonial,
+  categories,
+}) => {
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="customerName">Customer Name</Label>
+          <Input
+            id="customerName"
+            value={testimonialForm.customerName}
+            onChange={(e) =>
+              setTestimonialForm({
+                ...testimonialForm,
+                customerName: e.target.value,
+              })
+            }
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="customerEmail">Customer Email</Label>
+          <Input
+            id="customerEmail"
+            type="email"
+            value={testimonialForm.customerEmail}
+            onChange={(e) =>
+              setTestimonialForm({
+                ...testimonialForm,
+                customerEmail: e.target.value,
+              })
+            }
+            required
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="rating">Rating</Label>
+          <Select
+            value={testimonialForm.rating.toString()}
+            onValueChange={(value) =>
+              setTestimonialForm({
+                ...testimonialForm,
+                rating: Number.parseInt(value),
+              })
+            }
+          >
+            <SelectTrigger className="cursor-pointer">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="5" className="cursor-pointer">5 Stars</SelectItem>
+              <SelectItem value="4" className="cursor-pointer">4 Stars</SelectItem>
+              <SelectItem value="3" className="cursor-pointer">3 Stars</SelectItem>
+              <SelectItem value="2" className="cursor-pointer">2 Stars</SelectItem>
+              <SelectItem value="1" className="cursor-pointer">1 Star</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label htmlFor="category">Category</Label>
+          <Select
+            value={testimonialForm.category}
+            onValueChange={(value) =>
+              setTestimonialForm({ ...testimonialForm, category: value })
+            }
+          >
+            <SelectTrigger className="cursor-pointer">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category} className="cursor-pointer">
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="content">Testimonial Content</Label>
+        <Textarea
+          id="content"
+          value={testimonialForm.content}
+          onChange={(e) =>
+            setTestimonialForm({ ...testimonialForm, content: e.target.value })
+          }
+          rows={4}
+          required
+        />
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="featured"
+          checked={testimonialForm.featured}
+          onChange={(e) =>
+            setTestimonialForm({
+              ...testimonialForm,
+              featured: e.target.checked,
+            })
+          }
+          className="cursor-pointer"
+          title="Mark as featured testimonial"
+        />
+        <Label htmlFor="featured">Featured Testimonial</Label>
+      </div>
+
+      <div className="flex justify-end space-x-2">
+        <Button type="button" variant="outline" onClick={onCancel} className="cursor-pointer">
+          Cancel
+        </Button>
+        <Button type="submit" className="cursor-pointer">
+          {editingTestimonial ? "Update Testimonial" : "Add Testimonial"}
+        </Button>
+      </div>
+    </form>
+  );
+};
+
 export function TestimonialsManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -71,19 +224,7 @@ export function TestimonialsManagement() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] =
-    useState<Id<"testimonials"> | null>(null);
-  type Testimonial = {
-    _id: Id<"testimonials">;
-    customerName: string;
-    customerEmail: string;
-    content: string;
-    rating: number;
-    category: string;
-    featured?: boolean;
-    status: string;
-    _creationTime: number | string;
-  };
-
+    useState<Testimonial | null>(null);
   const [selectedTestimonial, setSelectedTestimonial] =
     useState<Testimonial | null>(null);
   const [testimonialForm, setTestimonialForm] = useState<TestimonialForm>({
@@ -166,7 +307,7 @@ export function TestimonialsManagement() {
     try {
       if (editingTestimonial) {
         await updateTestimonial({
-          testimonialId: editingTestimonial,
+          testimonialId: editingTestimonial._id,
           ...testimonialForm,
         });
         setIsEditDialogOpen(false);
@@ -174,7 +315,7 @@ export function TestimonialsManagement() {
       } else {
         await createTestimonial({
           ...testimonialForm,
-          status: "approved",
+          status: "approved", // Admin-created testimonials are auto-approved
         });
         setIsAddDialogOpen(false);
       }
@@ -185,7 +326,7 @@ export function TestimonialsManagement() {
   };
 
   const handleEdit = (testimonial: Testimonial) => {
-    setEditingTestimonial(testimonial._id);
+    setEditingTestimonial(testimonial);
     setTestimonialForm({
       customerName: testimonial.customerName,
       customerEmail: testimonial.customerEmail,
@@ -218,6 +359,13 @@ export function TestimonialsManagement() {
     }
   };
 
+  const handleCancel = () => {
+    setIsAddDialogOpen(false);
+    setIsEditDialogOpen(false);
+    setEditingTestimonial(null);
+    resetForm();
+  };
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -226,136 +374,6 @@ export function TestimonialsManagement() {
       />
     ));
   };
-
-  const TestimonialForm = () => (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="customerName">Customer Name</Label>
-          <Input
-            id="customerName"
-            value={testimonialForm.customerName}
-            onChange={(e) =>
-              setTestimonialForm({
-                ...testimonialForm,
-                customerName: e.target.value,
-              })
-            }
-            required
-          />
-        </div>
-        <div>
-          <Label htmlFor="customerEmail">Customer Email</Label>
-          <Input
-            id="customerEmail"
-            type="email"
-            value={testimonialForm.customerEmail}
-            onChange={(e) =>
-              setTestimonialForm({
-                ...testimonialForm,
-                customerEmail: e.target.value,
-              })
-            }
-            required
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="rating">Rating</Label>
-          <Select
-            value={testimonialForm.rating.toString()}
-            onValueChange={(value) =>
-              setTestimonialForm({
-                ...testimonialForm,
-                rating: Number.parseInt(value),
-              })
-            }
-          >
-            <SelectTrigger className="cursor-pointer">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5" className="cursor-pointer">5 Stars</SelectItem>
-              <SelectItem value="4" className="cursor-pointer">4 Stars</SelectItem>
-              <SelectItem value="3" className="cursor-pointer">3 Stars</SelectItem>
-              <SelectItem value="2" className="cursor-pointer">2 Stars</SelectItem>
-              <SelectItem value="1" className="cursor-pointer">1 Star</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label htmlFor="category">Category</Label>
-          <Select
-            value={testimonialForm.category}
-            onValueChange={(value) =>
-              setTestimonialForm({ ...testimonialForm, category: value })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select category" className="cursor-pointer" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category} className="cursor-pointer">
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div>
-        <Label htmlFor="content">Testimonial Content</Label>
-        <Textarea
-          id="content"
-          value={testimonialForm.content}
-          onChange={(e) =>
-            setTestimonialForm({ ...testimonialForm, content: e.target.value })
-          }
-          rows={4}
-          required
-        />
-      </div>
-
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="featured"
-          checked={testimonialForm.featured}
-          className="cursor-pointer"
-          onChange={(e) =>
-            setTestimonialForm({
-              ...testimonialForm,
-              featured: e.target.checked,
-            })
-          }
-          title="Mark as featured testimonial"
-        />
-        <Label htmlFor="featured">Featured Testimonial</Label>
-      </div>
-
-      <div className="flex justify-end space-x-2">
-        <Button
-          type="button"
-          variant="outline"
-          className="cursor-pointer"
-          onClick={() => {
-            setIsAddDialogOpen(false);
-            setIsEditDialogOpen(false);
-            resetForm();
-          }}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" className="cursor-pointer">
-          {editingTestimonial ? "Update Testimonial" : "Add Testimonial"}
-        </Button>
-      </div>
-    </form>
-  );
 
   if (!testimonials) {
     return <div>Loading testimonials...</div>;
@@ -389,7 +407,7 @@ export function TestimonialsManagement() {
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="cursor-pointer">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             {categories.map((category) => (
               <SelectItem key={category} value={category} className="cursor-pointer">
                 {category}
@@ -404,14 +422,21 @@ export function TestimonialsManagement() {
               Add Testimonial
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Add New Testimonial</DialogTitle>
               <DialogDescription>
                 Create a new customer testimonial
               </DialogDescription>
             </DialogHeader>
-            <TestimonialForm />
+            <TestimonialFormComponent
+              testimonialForm={testimonialForm}
+              setTestimonialForm={setTestimonialForm}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+              editingTestimonial={editingTestimonial}
+              categories={categories}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -445,12 +470,10 @@ export function TestimonialsManagement() {
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <Image
-                          src={
-                            "/placeholder.png"
-                          }
-                          width={38}
-                          height={38}
+                          src={"/placeholder.png"}
                           alt={testimonial.customerName}
+                          width={40}
+                          height={40}
                           className="h-10 w-10 rounded-full object-cover"
                         />
                         <div>
@@ -516,7 +539,7 @@ export function TestimonialsManagement() {
                               <Eye className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-2xl">
+                          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                               <DialogTitle>Testimonial Details</DialogTitle>
                               <DialogDescription>
@@ -533,12 +556,10 @@ export function TestimonialsManagement() {
                                     </h4>
                                     <div className="flex items-center space-x-3 mt-2">
                                       <Image
-                                        src={
-                                          "/placeholder.png"
-                                        }
-                                        width={38}
-                                        height={38}
+                                        src={"/placeholder.png"}
                                         alt={selectedTestimonial.customerName}
+                                        width={60}
+                                        height={60}
                                         className="h-15 w-15 rounded-full object-cover"
                                       />
                                       <div>
@@ -671,14 +692,21 @@ export function TestimonialsManagement() {
       </Card>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Testimonial</DialogTitle>
             <DialogDescription>
               Update testimonial information
             </DialogDescription>
           </DialogHeader>
-          <TestimonialForm />
+          <TestimonialFormComponent
+            testimonialForm={testimonialForm}
+            setTestimonialForm={setTestimonialForm}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            editingTestimonial={editingTestimonial}
+            categories={categories}
+          />
         </DialogContent>
       </Dialog>
     </div>

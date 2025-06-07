@@ -219,6 +219,7 @@ export function OrdersManagement() {
                             <Button
                               variant="outline"
                               size="icon"
+                              className="cursor-pointer"
                               onClick={() =>
                                 setSelectedOrder({
                                   _id: order._id,
@@ -332,23 +333,23 @@ export function OrdersManagement() {
                                         )
                                       }
                                     >
-                                      <SelectTrigger>
+                                      <SelectTrigger className="cursor-pointer">
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="pending">
+                                        <SelectItem value="pending" className="cursor-pointer">
                                           Pending
                                         </SelectItem>
-                                        <SelectItem value="processing">
+                                        <SelectItem value="processing" className="cursor-pointer">
                                           Processing
                                         </SelectItem>
-                                        <SelectItem value="shipped">
+                                        <SelectItem value="shipped" className="cursor-pointer">
                                           Shipped
                                         </SelectItem>
-                                        <SelectItem value="delivered">
+                                        <SelectItem value="delivered" className="cursor-pointer">
                                           Delivered
                                         </SelectItem>
-                                        <SelectItem value="cancelled">
+                                        <SelectItem value="cancelled" className="cursor-pointer">
                                           Cancelled
                                         </SelectItem>
                                       </SelectContent>
@@ -364,17 +365,17 @@ export function OrdersManagement() {
                             handleStatusUpdate(order._id as Id<"orders">, value)
                           }
                         >
-                          <SelectTrigger className="w-32">
+                          <SelectTrigger className="w-32 cursor-pointer">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="processing">
+                            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
+                            <SelectItem value="processing" className="cursor-pointer">
                               Processing
                             </SelectItem>
-                            <SelectItem value="shipped">Shipped</SelectItem>
-                            <SelectItem value="delivered">Delivered</SelectItem>
-                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                            <SelectItem value="shipped" className="cursor-pointer">Shipped</SelectItem>
+                            <SelectItem value="delivered" className="cursor-pointer">Delivered</SelectItem>
+                            <SelectItem value="cancelled" className="cursor-pointer">Cancelled</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

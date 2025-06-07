@@ -37,14 +37,7 @@ export default function ProductsPage() {
   const [minRating, setMinRating] = useState<number | undefined>(undefined);
   const [sortBy, setSortBy] = useState("featured");
 
-  const products = useQuery(api.products.getAllProducts, {
-    search: searchTerm || undefined,
-    category: categoryFilter !== "all" ? categoryFilter : undefined,
-    minPrice: priceRange[0],
-    maxPrice: priceRange[1],
-    minRating,
-    sortBy,
-  });
+  const products = useQuery(api.products.getAllProducts, {});
 
   console.log("Products fetched:", products);
 
@@ -220,7 +213,7 @@ export default function ProductsPage() {
                   id={product._id}
                   name={product.name}
                   price={`$${product.price.toFixed(2)}`}
-                  image={product.images[0] || "/placeholder.svg"}
+                  image={product.images[0] || "/placeholder.png"}
                   rating={product.rating}
                   category={product.category}
                 />

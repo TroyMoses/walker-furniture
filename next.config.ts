@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ["abundant-akita-464.convex.cloud"],
   },
 };
 

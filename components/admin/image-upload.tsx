@@ -77,7 +77,7 @@ export function ImageUpload({
             if (xhr.status === 200) {
               const response = JSON.parse(xhr.responseText);
               const storageId = response.storageId;
-              // Convert storage ID to URL format that Convex expects
+              // Return the full URL that Convex will serve
               resolve(
                 `https://abundant-akita-464.convex.cloud/api/storage/${storageId}`
               );
@@ -211,13 +211,13 @@ export function ImageUpload({
                 <div className="relative aspect-square">
                   <Image
                     fill
-                    src={image || "/placeholder.svg"}
+                    src={image || "/placeholder.png"}
                     alt={`Product image ${index + 1}`}
                     className="w-full h-full object-cover rounded"
                     onError={(e) => {
                       // Fallback for broken images
                       const target = e.target as HTMLImageElement;
-                      target.src = "/placeholder.svg?height=150&width=150";
+                      target.src = "/placeholder.png";
                     }}
                   />
                   <Button

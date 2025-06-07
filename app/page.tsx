@@ -208,7 +208,6 @@ export default function Home() {
                 key={index}
                 name={testimonial.name}
                 quote={testimonial.quote}
-                image={testimonial.image}
                 rating={testimonial.rating}
               />
             ))}

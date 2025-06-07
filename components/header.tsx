@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ShoppingCart, User, Settings } from "lucide-react";
+import { Menu, X, ShoppingCart, User, Settings, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-provider";
 import { useAuth, UserButton } from "@clerk/nextjs";
@@ -71,6 +71,15 @@ export function Header() {
               </Link>
             )}
 
+            {/* Orders - Only visible to signed-in customers (not admins) */}
+            {isSignedIn && !isAdmin && (
+              <Link href="/orders">
+                <Button variant="ghost" size="icon" className="text-gray-700 hover:text-amber-800 cursor-pointer">
+                  <Package className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
+
             {/* Cart */}
             <Link href="/cart" className="relative">
               <Button variant="ghost" size="icon" className="relative cursor-pointer">
@@ -124,6 +133,19 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
+
+              {/* Mobile Orders Link - Only for customers */}
+              {isSignedIn && !isAdmin && (
+                <Link
+                  href="/orders"
+                  className="block px-3 py-2 text-gray-700 hover:text-amber-800 transition-colors font-medium border-t border-amber-100 mt-2 pt-3"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  📦 My Orders
+                </Link>
+              )}
+
+              {/* Mobile Admin Link */}
               {isSignedIn && isAdmin && (
                 <Link
                   href="/admin"
