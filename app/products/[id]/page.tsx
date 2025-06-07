@@ -384,7 +384,7 @@ export default function ProductPage() {
                     id={relatedProduct._id}
                     name={relatedProduct.name}
                     price={`$${relatedProduct.price.toFixed(2)}`}
-                    image={relatedProduct.images[0] || "/placeholder.svg"}
+                    image={relatedProduct.images[0] || "/placeholder.png"}
                     rating={relatedProduct.rating}
                     category={relatedProduct.category}
                   />

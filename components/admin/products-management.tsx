@@ -63,142 +63,24 @@ interface ProductForm {
   isBestseller: boolean;
 }
 
-export function ProductsManagement() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Id<"products"> | null>(
-    null
-  );
-  const [productForm, setProductForm] = useState<ProductForm>({
-    name: "",
-    description: "",
-    longDescription: "",
-    price: 0,
-    category: "",
-    rating: 4.5,
-    reviewCount: 0,
-    colors: [],
-    images: [],
-    specifications: [],
-    features: [],
-    care: [],
-    inStock: true,
-    isNew: false,
-    isBestseller: false,
-  });
+interface ProductFormProps {
+  productForm: ProductForm;
+  setProductForm: React.Dispatch<React.SetStateAction<ProductForm>>;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onCancel: () => void;
+  editingProduct: Id<"products"> | null;
+  categories: string[];
+}
 
-  const products = useQuery(api.products.getAllProducts, {});
-  const createProduct = useMutation(api.products.createProduct);
-  const updateProduct = useMutation(api.products.updateProduct);
-  const deleteProduct = useMutation(api.products.deleteProduct);
-
-  const categories = [
-    "Sofas",
-    "Chairs",
-    "Tables",
-    "Beds",
-    "Storage",
-    "Lighting",
-    "Decor",
-  ];
-
-  const filteredProducts = products?.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "all" || product.category === categoryFilter;
-    return matchesSearch && matchesCategory;
-  });
-
-  const resetForm = () => {
-    setProductForm({
-      name: "",
-      description: "",
-      longDescription: "",
-      price: 0,
-      category: "",
-      rating: 4.5,
-      reviewCount: 0,
-      colors: [],
-      images: [],
-      specifications: [],
-      features: [],
-      care: [],
-      inStock: true,
-      isNew: false,
-      isBestseller: false,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (productForm.images.length === 0) {
-      alert("Please upload at least one product image");
-      return;
-    }
-
-    try {
-      if (editingProduct) {
-        await updateProduct({
-          productId: editingProduct,
-          ...productForm,
-        });
-        setIsEditDialogOpen(false);
-        setEditingProduct(null);
-      } else {
-        await createProduct(productForm);
-        setIsAddDialogOpen(false);
-      }
-      resetForm();
-    } catch (error) {
-      console.error("Failed to save product:", error);
-      alert("Failed to save product. Please try again.");
-    }
-  };
-
-  type ProductType = NonNullable<typeof products>[number];
-
-  const handleEdit = (product: ProductType) => {
-    setEditingProduct(product._id);
-    setProductForm({
-      name: product.name,
-      description: product.description,
-      longDescription: product.longDescription || "",
-      price: product.price,
-      category: product.category,
-      rating: product.rating || 4.5,
-      reviewCount: product.reviewCount || 0,
-      colors: product.colors || [],
-      images: product.images || [],
-      specifications: product.specifications || [],
-      features: product.features || [],
-      care: product.care || [],
-      inStock: product.inStock,
-      isNew: product.isNew || false,
-      isBestseller: product.isBestseller || false,
-    });
-    setIsEditDialogOpen(true);
-  };
-
-  const handleDelete = async (productId: Id<"products">) => {
-    if (
-      confirm(
-        "Are you sure you want to delete this product? This action cannot be undone."
-      )
-    ) {
-      try {
-        await deleteProduct({ productId });
-      } catch (error) {
-        console.error("Failed to delete product:", error);
-        alert("Failed to delete product. Please try again.");
-      }
-    }
-  };
-
+// Move ProductForm component outside to prevent re-creation on every render
+const ProductFormComponent: React.FC<ProductFormProps> = ({
+  productForm,
+  setProductForm,
+  onSubmit,
+  onCancel,
+  editingProduct,
+  categories,
+}) => {
   const addSpecification = () => {
     setProductForm({
       ...productForm,
@@ -221,9 +103,9 @@ export function ProductsManagement() {
     setProductForm({ ...productForm, specifications: newSpecs });
   };
 
-  const ProductForm = () => (
+  return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       className="space-y-6 max-h-[80vh] overflow-y-auto"
     >
       {/* Basic Information */}
@@ -273,7 +155,11 @@ export function ProductsManagement() {
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category} value={category} className="cursor-pointer">
+                <SelectItem
+                  key={category}
+                  value={category}
+                  className="cursor-pointer"
+                >
                   {category}
                 </SelectItem>
               ))}
@@ -463,10 +349,10 @@ export function ProductsManagement() {
             <input
               type="checkbox"
               checked={productForm.inStock}
-              className="cursor-pointer"
               onChange={(e) =>
                 setProductForm({ ...productForm, inStock: e.target.checked })
               }
+              className="cursor-pointer"
             />
             <span>In Stock</span>
           </label>
@@ -474,10 +360,10 @@ export function ProductsManagement() {
             <input
               type="checkbox"
               checked={productForm.isNew}
-              className="cursor-pointer"
               onChange={(e) =>
                 setProductForm({ ...productForm, isNew: e.target.checked })
               }
+              className="cursor-pointer"
             />
             <span>New Product</span>
           </label>
@@ -485,13 +371,13 @@ export function ProductsManagement() {
             <input
               type="checkbox"
               checked={productForm.isBestseller}
-              className="cursor-pointer"
               onChange={(e) =>
                 setProductForm({
                   ...productForm,
                   isBestseller: e.target.checked,
                 })
               }
+              className="cursor-pointer"
             />
             <span>Bestseller</span>
           </label>
@@ -503,13 +389,8 @@ export function ProductsManagement() {
         <Button
           type="button"
           variant="outline"
+          onClick={onCancel}
           className="cursor-pointer"
-          onClick={() => {
-            setIsAddDialogOpen(false);
-            setIsEditDialogOpen(false);
-            setEditingProduct(null);
-            resetForm();
-          }}
         >
           Cancel
         </Button>
@@ -519,6 +400,154 @@ export function ProductsManagement() {
       </div>
     </form>
   );
+};
+
+export function ProductsManagement() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Id<"products"> | null>(
+    null
+  );
+  const [productForm, setProductForm] = useState<ProductForm>({
+    name: "",
+    description: "",
+    longDescription: "",
+    price: 0,
+    category: "",
+    rating: 4.5,
+    reviewCount: 0,
+    colors: [],
+    images: [],
+    specifications: [],
+    features: [],
+    care: [],
+    inStock: true,
+    isNew: false,
+    isBestseller: false,
+  });
+
+  const products = useQuery(api.products.getAllProducts, {});
+  const createProduct = useMutation(api.products.createProduct);
+  const updateProduct = useMutation(api.products.updateProduct);
+  const deleteProduct = useMutation(api.products.deleteProduct);
+
+  const categories = [
+    "Sofas",
+    "Chairs",
+    "Tables",
+    "Beds",
+    "Storage",
+    "Lighting",
+    "Decor",
+  ];
+
+  const filteredProducts = products?.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
+  const resetForm = () => {
+    setProductForm({
+      name: "",
+      description: "",
+      longDescription: "",
+      price: 0,
+      category: "",
+      rating: 4.5,
+      reviewCount: 0,
+      colors: [],
+      images: [],
+      specifications: [],
+      features: [],
+      care: [],
+      inStock: true,
+      isNew: false,
+      isBestseller: false,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (productForm.images.length === 0) {
+      alert("Please upload at least one product image");
+      return;
+    }
+
+    try {
+      if (editingProduct) {
+        await updateProduct({
+          productId: editingProduct,
+          ...productForm,
+          images: productForm.images, // Remove the cast to Id<"_storage">[]
+        });
+        setIsEditDialogOpen(false);
+        setEditingProduct(null);
+      } else {
+        await createProduct({
+          ...productForm,
+          images: productForm.images, // Remove the cast to Id<"_storage">[]
+        });
+        setIsAddDialogOpen(false);
+      }
+      resetForm();
+    } catch (error) {
+      console.error("Failed to save product:", error);
+      alert("Failed to save product. Please try again.");
+    }
+  };
+
+  type ProductType = NonNullable<typeof products>[number];
+
+  const handleEdit = (product: ProductType) => {
+    setEditingProduct(product._id);
+    setProductForm({
+      name: product.name,
+      description: product.description,
+      longDescription: product.longDescription || "",
+      price: product.price,
+      category: product.category,
+      rating: product.rating || 4.5,
+      reviewCount: product.reviewCount || 0,
+      colors: product.colors || [],
+      images: product.images || [],
+      specifications: product.specifications || [],
+      features: product.features || [],
+      care: product.care || [],
+      inStock: product.inStock,
+      isNew: product.isNew || false,
+      isBestseller: product.isBestseller || false,
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDelete = async (productId: Id<"products">) => {
+    if (
+      confirm(
+        "Are you sure you want to delete this product? This action cannot be undone."
+      )
+    ) {
+      try {
+        await deleteProduct({ productId });
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+        alert("Failed to delete product. Please try again.");
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsAddDialogOpen(false);
+    setIsEditDialogOpen(false);
+    setEditingProduct(null);
+    resetForm();
+  };
 
   if (!products) {
     return <div>Loading products...</div>;
@@ -541,9 +570,13 @@ export function ProductsManagement() {
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="cursor-pointer">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             {categories.map((category) => (
-              <SelectItem key={category} value={category} className="cursor-pointer">
+              <SelectItem
+                key={category}
+                value={category}
+                className="cursor-pointer"
+              >
                 {category}
               </SelectItem>
             ))}
@@ -563,7 +596,14 @@ export function ProductsManagement() {
                 Create a new product for your furniture store
               </DialogDescription>
             </DialogHeader>
-            <ProductForm />
+            <ProductFormComponent
+              productForm={productForm}
+              setProductForm={setProductForm}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+              editingProduct={editingProduct}
+              categories={categories}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -596,7 +636,8 @@ export function ProductsManagement() {
                           height={40}
                           src={
                             product.images?.[0] ||
-                            "/placeholder.svg?height=40&width=40"
+                            "/placeholder.png" ||
+                            "/placeholder.svg"
                           }
                           alt={product.name}
                           className="h-10 w-10 rounded object-cover"
@@ -667,12 +708,19 @@ export function ProductsManagement() {
       </Card>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
             <DialogDescription>Update product information</DialogDescription>
           </DialogHeader>
-          <ProductForm />
+          <ProductFormComponent
+            productForm={productForm}
+            setProductForm={setProductForm}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            editingProduct={editingProduct}
+            categories={categories}
+          />
         </DialogContent>
       </Dialog>
     </div>
