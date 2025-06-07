@@ -437,15 +437,8 @@ export function ProductsManagement() {
   const updateProduct = useMutation(api.products.updateProduct);
   const deleteProduct = useMutation(api.products.deleteProduct);
 
-  const categories = [
-    "Sofas",
-    "Chairs",
-    "Tables",
-    "Beds",
-    "Storage",
-    "Lighting",
-    "Decor",
-  ];
+  const categoriesData = useQuery(api.categories.getActiveCategories, {});
+  const categories = categoriesData?.map((cat) => cat.name) || [];
 
   const filteredProducts = products?.filter((product) => {
     const matchesSearch =

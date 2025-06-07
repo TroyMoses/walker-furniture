@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { OrdersManagement } from "./orders-management";
 import { ProductsManagement } from "./products-management";
+import { CategoriesManagement } from "./categories-management";
 import { ContactsManagement } from "./contacts-management";
 import { ReviewsManagement } from "./reviews-management";
 import { TestimonialsManagement } from "./testimonials-management";
@@ -28,6 +29,7 @@ import {
   Mail,
   Users,
   DollarSign,
+  ChartBarStacked,
 } from "lucide-react";
 
 export function AdminDashboard() {
@@ -61,33 +63,58 @@ export function AdminDashboard() {
         className="space-y-6"
       >
         <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="overview" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="overview"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <LayoutDashboard className="h-4 w-4" />
             <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="orders" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="orders"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <ShoppingCart className="h-4 w-4" />
             <span className="hidden sm:inline">Orders</span>
           </TabsTrigger>
-          <TabsTrigger value="products" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="products"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Package className="h-4 w-4" />
             <span className="hidden sm:inline">Products</span>
           </TabsTrigger>
-          <TabsTrigger value="contacts" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="contacts"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <MessageSquare className="h-4 w-4" />
             <span className="hidden sm:inline">Contacts</span>
           </TabsTrigger>
-          <TabsTrigger value="reviews" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="reviews"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Star className="h-4 w-4" />
             <span className="hidden sm:inline">Reviews</span>
           </TabsTrigger>
-          <TabsTrigger value="testimonials" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="testimonials"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Quote className="h-4 w-4" />
             <span className="hidden sm:inline">Testimonials</span>
           </TabsTrigger>
-          <TabsTrigger value="newsletter" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="newsletter"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Mail className="h-4 w-4" />
             <span className="hidden sm:inline">Newsletter</span>
+          </TabsTrigger>
+          <TabsTrigger value="categories" className="cursor-pointer">
+            <ChartBarStacked className="h-4 w-4" />
+            <span className="hidden sm:inline">Categories</span>
           </TabsTrigger>
         </TabsList>
 
@@ -241,6 +268,9 @@ export function AdminDashboard() {
 
         <TabsContent value="newsletter">
           <NewsletterManagement />
+        </TabsContent>
+        <TabsContent value="categories">
+          <CategoriesManagement />
         </TabsContent>
       </Tabs>
     </div>

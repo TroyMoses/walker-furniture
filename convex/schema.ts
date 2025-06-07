@@ -10,6 +10,20 @@ export default defineSchema({
     role: v.optional(v.string()),
   }).index("by_tokenIdentifier", ["tokenIdentifier"]),
 
+  categories: defineTable({
+    name: v.string(),
+    description: v.string(),
+    slug: v.string(), 
+    image: v.id("_storage"),
+    displayOrder: v.number(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_display_order", ["displayOrder"])
+    .index("by_active", ["isActive"]),
+
   products: defineTable({
     name: v.string(),
     description: v.string(),
@@ -122,7 +136,7 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_created_at", ["createdAt"]),
 
-    newsletter: defineTable({
+  newsletter: defineTable({
     email: v.string(),
     name: v.optional(v.string()),
     status: v.string(), // "active", "unsubscribed"
