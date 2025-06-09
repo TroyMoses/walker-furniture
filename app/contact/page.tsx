@@ -5,7 +5,6 @@ import { SectionHeading } from "@/components/section-heading";
 import { ContactForm } from "@/components/contact-form";
 import { Mail, MapPin, Phone, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
 
 export default function ContactPage() {
   return (
@@ -33,7 +32,7 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-medium">Visit Our Showroom</h3>
                       <p className="text-gray-700">
-                        123 Furniture Lane, Woodville, CA 90210
+                        Opposite Club Guvnors, 1st Street Industrial Area.
                       </p>
                       <a
                         href="https://maps.google.com"
@@ -70,8 +69,8 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-medium">Email Us</h3>
                       <p className="text-gray-700">
-                        <a href="mailto:exitwalkerfurniture@gmail.com">
-                          exitwalkerfurniture@gmail.com
+                        <a href="mailto:kingabbey80@gmail.com">
+                          kingabbey80@gmail.com
                         </a>
                       </p>
                       <p className="text-sm text-gray-500">
@@ -100,27 +99,7 @@ export default function ContactPage() {
                 <h3 className="mb-4 text-xl font-semibold">Follow Us</h3>
                 <div className="flex gap-4">
                   <a
-                    href="#"
-                    className="rounded-full bg-amber-800 p-2 text-white transition-colors hover:bg-amber-900"
-                    aria-label="Facebook"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-5 w-5"
-                    >
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                    </svg>
-                  </a>
-                  <a
-                    href="#"
+                    href="https://wwww.instagram.com/exit_walker_furniture_concepts"
                     className="rounded-full bg-amber-800 p-2 text-white transition-colors hover:bg-amber-900"
                     aria-label="Instagram"
                   >
@@ -149,7 +128,7 @@ export default function ContactPage() {
                     </svg>
                   </a>
                   <a
-                    href="#"
+                    href="https://wwww.twitter.com/Abelexit"
                     className="rounded-full bg-amber-800 p-2 text-white transition-colors hover:bg-amber-900"
                     aria-label="Twitter"
                   >
@@ -168,28 +147,6 @@ export default function ContactPage() {
                       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                     </svg>
                   </a>
-                  <a
-                    href="#"
-                    className="rounded-full bg-amber-800 p-2 text-white transition-colors hover:bg-amber-900"
-                    aria-label="LinkedIn"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-5 w-5"
-                    >
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                      <rect x="2" y="9" width="4" height="12"></rect>
-                      <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
-                  </a>
                 </div>
               </div>
             </div>
@@ -197,64 +154,6 @@ export default function ContactPage() {
             <div>
               <SectionHeading title="Send Us a Message" centered={false} />
               <ContactForm />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Showroom */}
-      <section
-        id="showroom"
-        className="pt-16 pb-2 px-3 md:px-10 bg-gradient-to-b from-amber-50/30 to-white"
-      >
-        <div className="container">
-          <SectionHeading
-            title="Visit Our Showroom"
-            subtitle="Experience our furniture in person and speak with our design consultants"
-          />
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div className="relative h-[400px] overflow-hidden rounded-lg shadow-md">
-              <Image
-                width={800}
-                height={800}
-                src="/images/bg/bgimg1.jpg"
-                alt="Exit Walker Furniture Showroom"
-                className="h-full w-full object-cover"
-              />
-            </div>
-
-            <div className="flex flex-col justify-center">
-              <h3 className="mb-4 text-xl font-semibold">
-                Showroom Experience
-              </h3>
-              <p className="mb-4 text-gray-700">
-                Our showroom features carefully curated room settings that
-                showcase our furniture in realistic home environments. Touch the
-                materials, test the comfort, and visualize how our pieces will
-                look in your space.
-              </p>
-              <p className="mb-4 text-gray-700">
-                Our knowledgeable design consultants are available to answer
-                questions, provide advice, and help you find the perfect
-                furniture for your home.
-              </p>
-              <p className="mb-6 text-gray-700">
-                We also offer complimentary design services for customers
-                looking to furnish entire rooms or homes.
-              </p>
-
-              <div className="rounded-lg bg-gradient-to-r from-amber-50 to-white p-4 shadow-md">
-                <h4 className="font-medium">Showroom Location</h4>
-                <p className="text-gray-700">
-                  123 Furniture Lane, Woodville, CA 90210
-                </p>
-                <div className="mt-2 h-40 w-full bg-gray-200">
-                  <div className="flex h-full items-center justify-center">
-                    <p className="text-sm text-gray-500">Map Placeholder</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -273,7 +172,7 @@ export default function ContactPage() {
               {
                 question: "Do you offer delivery services?",
                 answer:
-                  "Yes, we offer white-glove delivery service throughout the continental United States. Our delivery team will place the furniture in your desired location, assemble it if necessary, and remove all packaging materials.",
+                  "Yes, we offer white-glove delivery services all over the country. Our delivery team will place the furniture in your desired location, assemble it if necessary, and remove all packaging materials.",
               },
               {
                 question: "What is your return policy?",
@@ -289,11 +188,6 @@ export default function ContactPage() {
                 question: "How long does custom furniture take?",
                 answer:
                   "Custom furniture typically takes 8-12 weeks from order to delivery, depending on the complexity of the design and current production schedule. We'll provide you with a specific timeline when you place your order.",
-              },
-              {
-                question: "Do you ship internationally?",
-                answer:
-                  "Yes, we ship to select international destinations. International shipping costs and delivery times vary by location. Please contact us for a shipping quote to your specific location.",
               },
             ].map((faq, index) => (
               <div

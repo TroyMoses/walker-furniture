@@ -2,7 +2,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { HeroSection } from "@/components/hero-section";
 import { SectionHeading } from "@/components/section-heading";
-import { Button } from "@/components/ui/button";
 import { Award, Clock, Leaf, Recycle, ShieldCheck, Users } from "lucide-react";
 import Image from "next/image";
 
@@ -252,31 +251,6 @@ export default function AboutPage() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Join Our Team */}
-      <section className="pt-16 pb-12 px-3 md:px-10 text-gray-700">
-        <div className="container">
-          <div className="flex flex-col items-center justify-between gap-8 text-center md:flex-row md:text-left">
-            <div className="max-w-lg">
-              <h2 className="mb-4 text-3xl font-bold">Join Our Team</h2>
-              <p>
-                We{"'"}re always looking for talented craftspeople, designers,
-                and furniture enthusiasts to join our team. If you share our
-                passion for quality and craftsmanship, we{"'"}d love to hear
-                from you.
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="border-amber-800 text-gray-700 hover:bg-white/10"
-              size="lg"
-              asChild
-            >
-              <a href="/careers">View Open Positions</a>
-            </Button>
           </div>
         </div>
       </section>
