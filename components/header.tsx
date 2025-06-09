@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Menu, X, ShoppingCart, User, Settings, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-provider";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { SignInButton, useAuth, UserButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -96,11 +96,11 @@ export function Header() {
             {isSignedIn ? (
               <UserButton afterSignOutUrl="/" />
             ) : (
-              <Link href="/sign-in">
-                <Button variant="ghost" size="icon" className="cursor-pointer">
+              <SignInButton>
+                <Button variant="outline" size="icon" className="border-amber-800 text-amber-800 hover:bg-amber-50 cursor-pointer">
                   <User className="h-5 w-5" />
                 </Button>
-              </Link>
+              </SignInButton>
             )}
 
             {/* Mobile menu button */}
