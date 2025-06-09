@@ -134,7 +134,7 @@ export function AdminDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    ${totalRevenue.toLocaleString()}
+                    UGX {totalRevenue.toLocaleString("en-UG")}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     From {totalOrders} orders
