@@ -131,9 +131,9 @@ export default function ProductPage() {
 
             <div className="mb-6">
               <span className="text-2xl font-bold text-amber-800">
-                ${product.price.toFixed(2)}
+                UGX {product.price.toLocaleString('en-UG')}
               </span>
-              <span className="ml-2 text-sm text-gray-500">Free shipping</span>
+              <span className="ml-2 text-sm text-gray-500">Free Delivery on Condition</span>
             </div>
 
             <p className="mb-6 text-gray-700">{product.description}</p>
@@ -221,8 +221,8 @@ export default function ProductPage() {
             <div className="rounded-lg bg-gradient-to-r from-amber-50 to-white p-4 shadow-sm">
               <h3 className="mb-2 font-medium">Delivery & Returns</h3>
               <ul className="space-y-1 text-sm text-gray-700">
-                <li>Free shipping on orders over $999</li>
-                <li>Estimated delivery: 2-3 weeks</li>
+                <li>Free delivery on orders over UGX 900,000</li>
+                <li>Estimated delivery: 1-2 days</li>
                 <li>White glove delivery and setup included</li>
                 <li>30-day return policy for stock items</li>
               </ul>
@@ -383,7 +383,7 @@ export default function ProductPage() {
                     key={relatedProduct._id}
                     id={relatedProduct._id}
                     name={relatedProduct.name}
-                    price={`$${relatedProduct.price.toFixed(2)}`}
+                    price={`UGX ${product.price.toLocaleString("en-UG")}`}
                     image={relatedProduct.images[0] || "/placeholder.png"}
                     rating={relatedProduct.rating}
                     category={relatedProduct.category}

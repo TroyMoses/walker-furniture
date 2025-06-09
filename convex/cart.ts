@@ -60,10 +60,42 @@ export const getCartItems = query({
       .withIndex("by_user", (q) => q.eq("userId", user._id))
       .collect();
 
-    // Get product details for each cart item
+    // Get product details for each cart item and convert storage IDs to URLs
     const itemsWithProducts = await Promise.all(
       cartItems.map(async (item) => {
         const product = await ctx.db.get(item.productId);
+
+        if (product && product.images) {
+          // Convert storage IDs to URLs
+          const imageUrls = await Promise.all(
+            product.images.map(async (image) => {
+              // Check if it's a storage ID (starts with 'kg')
+              if (typeof image === "string" && image.startsWith("kg")) {
+                try {
+                  const url = await ctx.storage.getUrl(image as string);
+                  return url;
+                } catch (error) {
+                  console.error("Error getting image URL:", error);
+                  return null;
+                }
+              }
+              // If it's already a URL, return as is
+              return image;
+            })
+          );
+
+          // Filter out any null URLs
+          const validImageUrls = imageUrls.filter((url) => url !== null);
+
+          return {
+            ...item,
+            product: {
+              ...product,
+              images: validImageUrls,
+            },
+          };
+        }
+
         return {
           ...item,
           product,

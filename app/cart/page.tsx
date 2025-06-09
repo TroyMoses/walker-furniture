@@ -99,7 +99,9 @@ export default function CartPage() {
             Please sign in to access your shopping cart and place orders.
           </p>
           <Link href="/sign-in">
-            <Button className="bg-amber-800 hover:bg-amber-900 cursor-pointer">Sign In</Button>
+            <Button className="bg-amber-800 hover:bg-amber-900 cursor-pointer">
+              Sign In
+            </Button>
           </Link>
         </div>
         <Footer />
@@ -169,7 +171,7 @@ export default function CartPage() {
                         </p>
                       )}
                       <p className="text-sm font-medium text-amber-800">
-                        ${item.product?.price.toFixed(2)}
+                        UGX {item.product?.price.toLocaleString("en-UG")}
                       </p>
                     </div>
 
@@ -177,7 +179,7 @@ export default function CartPage() {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-8 w-8"
+                        className="h-8 w-8 cursor-pointer"
                         onClick={() =>
                           handleQuantityChange(item._id, item.quantity - 1)
                         }
@@ -189,7 +191,7 @@ export default function CartPage() {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-8 w-8"
+                        className="h-8 w-8 cursor-pointer"
                         onClick={() =>
                           handleQuantityChange(item._id, item.quantity + 1)
                         }
@@ -201,15 +203,15 @@ export default function CartPage() {
 
                     <div className="text-right">
                       <p className="font-medium">
-                        $
-                        {((item.product?.price || 0) * item.quantity).toFixed(
-                          2
-                        )}
+                        UGX{" "}
+                        {(
+                          (item.product?.price || 0) * item.quantity
+                        ).toLocaleString("en-UG")}
                       </p>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-red-600 hover:text-red-700 mt-1"
+                        className="text-red-600 hover:text-red-700 mt-1 cursor-pointer"
                         onClick={() => handleRemoveItem(item._id)}
                         disabled={isLoading}
                       >
@@ -232,16 +234,16 @@ export default function CartPage() {
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>UGX {totalPrice.toLocaleString("en-UG")}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span>Free</span>
+                    <span>Delivery</span>
+                    <span className="text-sm italic font-semibold">Free for orders over UGX 900,000</span>
                   </div>
                   <div className="border-t pt-2">
                     <div className="flex justify-between font-bold">
                       <span>Total</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>UGX {totalPrice.toLocaleString("en-UG")}</span>
                     </div>
                   </div>
                 </div>
@@ -320,7 +322,7 @@ export default function CartPage() {
 
                   <Button
                     type="submit"
-                    className="w-full bg-amber-800 hover:bg-amber-900"
+                    className="w-full bg-amber-800 hover:bg-amber-900 cursor-pointer"
                     disabled={isCheckingOut || isLoading}
                   >
                     {isCheckingOut ? "Placing Order..." : "Place Order"}

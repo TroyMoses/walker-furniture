@@ -82,9 +82,30 @@ export const getUserOrders = query({
         const itemsWithProducts = await Promise.all(
           order.items.map(async (item) => {
             const product = await ctx.db.get(item.productId);
+
+            // Convert storage IDs to URLs for images
+            let productWithUrls = product;
+            if (product && product.images) {
+              const imageUrls = await Promise.all(
+                product.images.map(async (imageId) => {
+                  if (typeof imageId === "string" && imageId.startsWith("kg")) {
+                    // This is a storage ID, convert to URL
+                    return await ctx.storage.getUrl(imageId as string);
+                  }
+                  // This is already a URL
+                  return imageId;
+                })
+              );
+
+              productWithUrls = {
+                ...product,
+                images: imageUrls.filter(Boolean) as string[],
+              };
+            }
+
             return {
               ...item,
-              product,
+              product: productWithUrls,
             };
           })
         );
@@ -135,9 +156,30 @@ export const getAllOrders = query({
         const itemsWithProducts = await Promise.all(
           order.items.map(async (item) => {
             const product = await ctx.db.get(item.productId);
+
+            // Convert storage IDs to URLs for images
+            let productWithUrls = product;
+            if (product && product.images) {
+              const imageUrls = await Promise.all(
+                product.images.map(async (imageId) => {
+                  if (typeof imageId === "string" && imageId.startsWith("kg")) {
+                    // This is a storage ID, convert to URL
+                    return await ctx.storage.getUrl(imageId as string);
+                  }
+                  // This is already a URL
+                  return imageId;
+                })
+              );
+
+              productWithUrls = {
+                ...product,
+                images: imageUrls.filter(Boolean) as string[],
+              };
+            }
+
             return {
               ...item,
-              product,
+              product: productWithUrls,
             };
           })
         );

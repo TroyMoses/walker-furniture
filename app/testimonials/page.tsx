@@ -100,14 +100,14 @@ export default function TestimonialsPage() {
               className="mb-8"
             >
               <TabsList className="mx-auto">
-                <TabsTrigger value="all">
+                <TabsTrigger value="all" className="cursor-pointer">
                   All ({allTestimonials.length})
                 </TabsTrigger>
                 {categories.map((category) => {
                   const categoryKey = category.toLowerCase().replace(" ", "-");
                   const count = getFilteredTestimonials(categoryKey).length;
                   return (
-                    <TabsTrigger key={categoryKey} value={categoryKey}>
+                    <TabsTrigger key={categoryKey} value={categoryKey} className="cursor-pointer">
                       {category} ({count})
                     </TabsTrigger>
                   );

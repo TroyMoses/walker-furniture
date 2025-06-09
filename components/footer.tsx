@@ -213,22 +213,22 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/faq" className="hover:text-amber-800">
+                  <Link href="#" className="hover:text-amber-800">
                     FAQs
                   </Link>
                 </li>
                 <li>
-                  <Link href="/shipping" className="hover:text-amber-800">
+                  <Link href="#" className="hover:text-amber-800">
                     Shipping & Returns
                   </Link>
                 </li>
                 <li>
-                  <Link href="/warranty" className="hover:text-amber-800">
+                  <Link href="#" className="hover:text-amber-800">
                     Warranty
                   </Link>
                 </li>
                 <li>
-                  <Link href="/care" className="hover:text-amber-800">
+                  <Link href="#" className="hover:text-amber-800">
                     Care Instructions
                   </Link>
                 </li>

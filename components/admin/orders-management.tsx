@@ -146,16 +146,28 @@ export function OrdersManagement() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48">
+          <SelectTrigger className="w-full sm:w-48 cursor-pointer">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Orders</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="processing">Processing</SelectItem>
-            <SelectItem value="shipped">Shipped</SelectItem>
-            <SelectItem value="delivered">Delivered</SelectItem>
-            <SelectItem value="cancelled">Cancelled</SelectItem>
+            <SelectItem value="all" className="cursor-pointer">
+              All Orders
+            </SelectItem>
+            <SelectItem value="pending" className="cursor-pointer">
+              Pending
+            </SelectItem>
+            <SelectItem value="processing" className="cursor-pointer">
+              Processing
+            </SelectItem>
+            <SelectItem value="shipped" className="cursor-pointer">
+              Shipped
+            </SelectItem>
+            <SelectItem value="delivered" className="cursor-pointer">
+              Delivered
+            </SelectItem>
+            <SelectItem value="cancelled" className="cursor-pointer">
+              Cancelled
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -199,7 +211,7 @@ export function OrdersManagement() {
                     </TableCell>
                     <TableCell>{order.items.length} items</TableCell>
                     <TableCell className="font-medium">
-                      ${order.totalAmount.toFixed(2)}
+                      UGX {order.totalAmount.toLocaleString("en-UG")}
                     </TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(order.status)}>
@@ -278,12 +290,15 @@ export function OrdersManagement() {
                                     </h4>
                                     <div className="space-y-2">
                                       {selectedOrder.items.map(
-                                        (item: {
-                                          name: string;
-                                          color?: string;
-                                          quantity: number;
-                                          price: number;
-                                        }, index: number) => (
+                                        (
+                                          item: {
+                                            name: string;
+                                            color?: string;
+                                            quantity: number;
+                                            price: number;
+                                          },
+                                          index: number
+                                        ) => (
                                           <div
                                             key={index}
                                             className="flex justify-between items-center p-2 bg-gray-50 rounded"
@@ -304,10 +319,10 @@ export function OrdersManagement() {
                                               </span>
                                             </div>
                                             <span className="font-medium">
-                                              $
+                                              UGX{" "}
                                               {(
                                                 item.price * item.quantity
-                                              ).toFixed(2)}
+                                              ).toLocaleString("en-UG")}
                                             </span>
                                           </div>
                                         )
@@ -316,7 +331,10 @@ export function OrdersManagement() {
                                     <div className="flex justify-between items-center pt-2 border-t">
                                       <span className="font-medium">Total</span>
                                       <span className="font-bold">
-                                        ${selectedOrder.totalAmount.toFixed(2)}
+                                        UGX{" "}
+                                        {selectedOrder.totalAmount.toLocaleString(
+                                          "en-UG"
+                                        )}
                                       </span>
                                     </div>
                                   </div>
@@ -337,19 +355,34 @@ export function OrdersManagement() {
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="pending" className="cursor-pointer">
+                                        <SelectItem
+                                          value="pending"
+                                          className="cursor-pointer"
+                                        >
                                           Pending
                                         </SelectItem>
-                                        <SelectItem value="processing" className="cursor-pointer">
+                                        <SelectItem
+                                          value="processing"
+                                          className="cursor-pointer"
+                                        >
                                           Processing
                                         </SelectItem>
-                                        <SelectItem value="shipped" className="cursor-pointer">
+                                        <SelectItem
+                                          value="shipped"
+                                          className="cursor-pointer"
+                                        >
                                           Shipped
                                         </SelectItem>
-                                        <SelectItem value="delivered" className="cursor-pointer">
+                                        <SelectItem
+                                          value="delivered"
+                                          className="cursor-pointer"
+                                        >
                                           Delivered
                                         </SelectItem>
-                                        <SelectItem value="cancelled" className="cursor-pointer">
+                                        <SelectItem
+                                          value="cancelled"
+                                          className="cursor-pointer"
+                                        >
                                           Cancelled
                                         </SelectItem>
                                       </SelectContent>
@@ -369,13 +402,36 @@ export function OrdersManagement() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending" className="cursor-pointer">Pending</SelectItem>
-                            <SelectItem value="processing" className="cursor-pointer">
+                            <SelectItem
+                              value="pending"
+                              className="cursor-pointer"
+                            >
+                              Pending
+                            </SelectItem>
+                            <SelectItem
+                              value="processing"
+                              className="cursor-pointer"
+                            >
                               Processing
                             </SelectItem>
-                            <SelectItem value="shipped" className="cursor-pointer">Shipped</SelectItem>
-                            <SelectItem value="delivered" className="cursor-pointer">Delivered</SelectItem>
-                            <SelectItem value="cancelled" className="cursor-pointer">Cancelled</SelectItem>
+                            <SelectItem
+                              value="shipped"
+                              className="cursor-pointer"
+                            >
+                              Shipped
+                            </SelectItem>
+                            <SelectItem
+                              value="delivered"
+                              className="cursor-pointer"
+                            >
+                              Delivered
+                            </SelectItem>
+                            <SelectItem
+                              value="cancelled"
+                              className="cursor-pointer"
+                            >
+                              Cancelled
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
