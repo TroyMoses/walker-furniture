@@ -263,10 +263,10 @@ export function Footer() {
                 <Link href="#" className="hover:text-amber-800">
                   <Facebook className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="hover:text-amber-800">
+                <Link href="https://wwww.instagram.com/exit_walker_furniture_concepts" className="hover:text-amber-800">
                   <Instagram className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="hover:text-amber-800">
+                <Link href="https://wwww.twitter.com/Abelexit" className="hover:text-amber-800">
                   <Twitter className="h-5 w-5" />
                 </Link>
                 <Link href="#" className="hover:text-amber-800">
