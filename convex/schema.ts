@@ -13,7 +13,7 @@ export default defineSchema({
   categories: defineTable({
     name: v.string(),
     description: v.string(),
-    slug: v.string(), 
+    slug: v.string(),
     image: v.id("_storage"),
     displayOrder: v.number(),
     isActive: v.boolean(),
@@ -107,6 +107,15 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_status", ["status"])
     .index("by_rating", ["rating"]),
+
+  reviewVotes: defineTable({
+    reviewId: v.id("reviews"),
+    userId: v.id("users"),
+    voteType: v.union(v.literal("helpful"), v.literal("unhelpful")),
+    createdAt: v.number(),
+  })
+    .index("by_review", ["reviewId"])
+    .index("by_user_review", ["userId", "reviewId"]),
 
   testimonials: defineTable({
     userId: v.optional(v.id("users")),

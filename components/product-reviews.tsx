@@ -24,9 +24,7 @@ interface ProductReviewsProps {
   reviewCount: number;
 }
 
-export function ProductReviews({
-  productId,
-}: ProductReviewsProps) {
+export function ProductReviews({ productId }: ProductReviewsProps) {
   const { isSignedIn } = useAuth();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [selectedRating, setSelectedRating] = useState(5);
@@ -66,9 +64,14 @@ export function ProductReviews({
       setReviewForm({ title: "", comment: "" });
       setSelectedRating(5);
     } catch (error) {
-      toast.error(
-        "Failed to submit review. You may have already reviewed this product."
-      );
+      if (
+        error instanceof Error &&
+        error.message.includes("already reviewed")
+      ) {
+        toast.error("You have already reviewed this product.");
+      } else {
+        toast.error("Failed to submit review. Please try again.");
+      }
       console.error("Review submission error:", error);
     }
   };
@@ -86,7 +89,11 @@ export function ProductReviews({
       });
       toast.success("Thank you for your feedback!");
     } catch (error) {
-      toast.error("Failed to record your vote");
+      if (error instanceof Error && error.message.includes("already voted")) {
+        toast.error("You have already voted on this review");
+      } else {
+        toast.error("Failed to record your vote");
+      }
       console.error("Vote error:", error);
     }
   };
@@ -189,63 +196,12 @@ export function ProductReviews({
           <div className="space-y-6">
             {reviews && reviews.length > 0 ? (
               reviews.map((review) => (
-                <div
+                <ReviewItem
                   key={review._id}
-                  className="rounded-lg bg-gradient-to-r from-white to-amber-50 p-6 shadow-sm"
-                >
-                  <div className="mb-4 flex items-start justify-between">
-                    <div className="flex items-start gap-4">
-                      <Avatar>
-                        <AvatarImage
-                          src="/placeholder.svg"
-                          alt={review.customerName}
-                        />
-                        <AvatarFallback>
-                          {review.customerName.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold">
-                            {review.customerName}
-                          </h4>
-                          {review.verified && (
-                            <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
-                              Verified Purchase
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {format(new Date(review.createdAt), "MMMM dd, yyyy")}
-                        </div>
-                      </div>
-                    </div>
-                    <ProductRating rating={review.rating} />
-                  </div>
-
-                  <h5 className="mb-2 font-medium">{review.title}</h5>
-                  <p className="text-gray-700">{review.comment}</p>
-
-                  <div className="mt-4 flex items-center gap-6">
-                    <div className="flex items-center gap-1">
-                      <button
-                        className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 hover:text-amber-800"
-                        onClick={() => handleVote(review._id, true)}
-                      >
-                        <ThumbsUp className="h-4 w-4" /> {review.helpfulVotes}
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <button
-                        className="cursor-pointer flex items-center gap-1 text-sm text-gray-500 hover:text-amber-800"
-                        onClick={() => handleVote(review._id, false)}
-                      >
-                        <ThumbsDown className="h-4 w-4" />{" "}
-                        {review.unhelpfulVotes}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  review={review}
+                  onVote={handleVote}
+                  isSignedIn={!!isSignedIn}
+                />
               ))
             ) : (
               <div className="text-center py-8">
@@ -299,6 +255,90 @@ export function ProductReviews({
               </div>
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface Review {
+  _id: string;
+  customerName: string;
+  verified: boolean;
+  createdAt: string | number | Date;
+  rating: number;
+  title: string;
+  comment: string;
+  helpfulVotes: number;
+  unhelpfulVotes: number;
+}
+
+interface ReviewItemProps {
+  review: Review;
+  onVote: (reviewId: string, helpful: boolean) => void;
+  isSignedIn: boolean;
+}
+
+function ReviewItem({ review, onVote, isSignedIn }: ReviewItemProps) {
+  const userVote = useQuery(
+    api.reviews.getUserVoteForReview,
+    isSignedIn ? { reviewId: review._id as Id<"reviews"> } : "skip"
+  );
+
+  return (
+    <div className="rounded-lg bg-gradient-to-r from-white to-amber-50 p-6 shadow-sm">
+      <div className="mb-4 flex items-start justify-between">
+        <div className="flex items-start gap-4">
+          <Avatar>
+            <AvatarImage src="/placeholder.svg" alt={review.customerName} />
+            <AvatarFallback>{review.customerName.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold">{review.customerName}</h4>
+              {review.verified && (
+                <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
+                  Verified Purchase
+                </span>
+              )}
+            </div>
+            <div className="text-sm text-gray-500">
+              {format(new Date(review.createdAt), "MMMM dd, yyyy")}
+            </div>
+          </div>
+        </div>
+        <ProductRating rating={review.rating} />
+      </div>
+
+      <h5 className="mb-2 font-medium">{review.title}</h5>
+      <p className="text-gray-700">{review.comment}</p>
+
+      <div className="mt-4 flex items-center gap-6">
+        <div className="flex items-center gap-1">
+          <button
+            className={`cursor-pointer flex items-center gap-1 text-sm transition-colors ${
+              userVote === "helpful"
+                ? "text-amber-800 font-medium"
+                : "text-gray-500 hover:text-amber-800"
+            }`}
+            onClick={() => onVote(review._id, true)}
+            disabled={!isSignedIn}
+          >
+            <ThumbsUp className="h-4 w-4" /> {review.helpfulVotes}
+          </button>
+        </div>
+        <div className="flex items-center gap-1">
+          <button
+            className={`cursor-pointer flex items-center gap-1 text-sm transition-colors ${
+              userVote === "unhelpful"
+                ? "text-amber-800 font-medium"
+                : "text-gray-500 hover:text-amber-800"
+            }`}
+            onClick={() => onVote(review._id, false)}
+            disabled={!isSignedIn}
+          >
+            <ThumbsDown className="h-4 w-4" /> {review.unhelpfulVotes}
+          </button>
         </div>
       </div>
     </div>
