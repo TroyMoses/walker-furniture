@@ -1,14 +1,13 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HeroSection } from "@/components/hero-section";
-import { SectionHeading } from "@/components/section-heading";
-import { TestimonialCard } from "@/components/testimonial-card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { api } from "@/convex/_generated/api";
 import { preloadQuery } from "convex/nextjs";
 import { HomeCategoriesSection } from "@/components/home-categories-section";
 import { HomeFeaturedProductsSection } from "@/components/home-featured-products-section";
+import { HomeTestimonialsSection } from "@/components/home-testimonials-section";
 
 export default async function Home() {
   // Preload data for better performance
@@ -19,6 +18,10 @@ export default async function Home() {
   const featuredProductsQuery = await preloadQuery(
     api.products.getFeaturedProducts,
     {}
+  );
+  const testimonialsQuery = await preloadQuery(
+    api.testimonials.getApprovedTestimonials,
+    { limit: 3 }
   );
 
   return (
@@ -88,46 +91,7 @@ export default async function Home() {
       </section>
 
       {/* Testimonials */}
-      <section
-        id="testimonials"
-        className="bg-gradient-to-b from-amber-50/30 to-white py-8 md:py-16 px-3 md:px-10"
-      >
-        <div className="container">
-          <SectionHeading title="What Our Customers Say" />
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {[
-              {
-                name: "Sarah Johnson",
-                quote:
-                  "The quality of our dining table is exceptional. It's become the centerpiece of our home where we gather for family meals.",
-                image: "/images/testimonials/shuga.jpg",
-                rating: 5.0,
-              },
-              {
-                name: "Michael Chen",
-                quote:
-                  "I've purchased furniture from many stores, but Walker's craftsmanship is unmatched. Their attention to detail is evident in every piece.",
-                image: "/images/testimonials/shuga.jpg",
-                rating: 4.7,
-              },
-              {
-                name: "Emily Rodriguez",
-                quote:
-                  "The custom bookshelf they built fits perfectly in our living room. The team was professional from design to delivery.",
-                image: "/images/testimonials/shuga.jpg",
-                rating: 4.9,
-              },
-            ].map((testimonial, index) => (
-              <TestimonialCard
-                key={index}
-                name={testimonial.name}
-                quote={testimonial.quote}
-                rating={testimonial.rating}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeTestimonialsSection preloadedTestimonials={testimonialsQuery} />
 
       <Footer />
     </div>
