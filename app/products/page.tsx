@@ -178,7 +178,7 @@ export default function ProductsPage() {
                   key={product._id}
                   id={product._id}
                   name={product.name}
-                  price={`$${product.price.toFixed(2)}`}
+                  price={`UGX ${product.price.toLocaleString("en-UG")}`}
                   image={product.images[0] || "/placeholder.png"}
                   rating={product.rating}
                   category={product.category}

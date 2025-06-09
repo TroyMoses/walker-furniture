@@ -317,6 +317,8 @@ export const updateProduct = mutation({
     inStock: v.optional(v.boolean()),
     isNew: v.optional(v.boolean()),
     isBestseller: v.optional(v.boolean()),
+    rating: v.optional(v.number()),
+    reviewCount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { productId, ...updates } = args;

@@ -96,8 +96,8 @@ export default function OrdersPage() {
             No orders yet
           </h1>
           <p className="text-gray-600 mb-8">
-            You haven{"'"}t placed any orders yet. Start shopping to see your orders
-            here.
+            You haven{"'"}t placed any orders yet. Start shopping to see your
+            orders here.
           </p>
           <Link href="/products">
             <Button className="bg-amber-800 hover:bg-amber-900">
@@ -178,7 +178,10 @@ export default function OrdersPage() {
                           </div>
                           <div className="text-right">
                             <p className="font-medium text-sm">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              UGX{" "}
+                              {(item.price * item.quantity).toLocaleString(
+                                "en-UG"
+                              )}
                             </p>
                           </div>
                         </div>
@@ -224,7 +227,7 @@ export default function OrdersPage() {
                   <div className="flex justify-between items-center pt-4 border-t">
                     <span className="font-medium">Total</span>
                     <span className="font-bold text-lg text-amber-800">
-                      ${order.totalAmount.toFixed(2)}
+                      UGX {order.totalAmount.toLocaleString("en-UG")}
                     </span>
                   </div>
                 </div>

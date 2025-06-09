@@ -136,7 +136,7 @@ const ProductFormComponent: React.FC<ProductFormProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor="price">Price ($) *</Label>
+            <Label htmlFor="price">Price (UGX) *</Label>
             <Input
               id="price"
               type="number"
@@ -681,7 +681,7 @@ export function ProductsManagement() {
                     </TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell className="font-medium">
-                      ${product.price.toFixed(2)}
+                      UGX {product.price.toLocaleString('en-UG')}
                     </TableCell>
                     <TableCell>
                       <Badge
