@@ -61,7 +61,7 @@ export default async function Home() {
             </div>
             <div className="flex flex-col justify-center">
               <h2 className="mb-6 text-3xl font-bold text-center md:text-start">
-                About Exit Exit Walker Furniture
+                About Exit Walker Furniture
               </h2>
               <p className="mb-4 text-gray-700">
                 Since 2017, Exit Walker Furniture has been crafting
